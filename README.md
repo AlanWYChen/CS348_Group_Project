@@ -13,6 +13,7 @@ This can be done by running the sql script `hello_world.sql`, via the command: `
 # Example Query
 `SELECT abbreviation as abbr, nickname as name, city FROM hello_world.team_details WHERE state='TEXAS'`
 
+```
 +------+-----------+-------------+
 | abbr | name      | city        |
 +------+-----------+-------------+
@@ -20,3 +21,4 @@ This can be done by running the sql script `hello_world.sql`, via the command: `
 | HOU  | Rockets   | Houston     |
 | SAS  | Spurs     | San Antonio |
 +------+-----------+-------------+
+```
