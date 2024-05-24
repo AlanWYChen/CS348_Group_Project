@@ -8,7 +8,8 @@
 1. Create sample database `hello_world`, and create a table `team_details` with the columns corresponding to the columns in `team.csv`. 
 2. Next, allow mysql to load local files via the `local-infile` option and read the csv file into the `team_details` table. 
 
-This can be done by running the sql script `hello_world.sql`, via the command: `mysql --local-infile=1 -u root < hello_world.sql`
+This can be done by running the sql script `hello_world.sql`, via the command:
+`mysql --local-infile=1 -u root < hello_world.sql`
 
 # Example Query
 `SELECT abbreviation as abbr, nickname as name, city FROM hello_world.team_details WHERE state='TEXAS'`
