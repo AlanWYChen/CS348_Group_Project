@@ -1,14 +1,22 @@
 # CS348_Group_Project
 
-# General
-1. Create the necessary column names and data types for the SQL Table with the constraints 
-2. Insert the table through a csv file into the table
+# MySQL Setup
+1. Install `mysql` via package manager of choice. For example on MacOS, run `brew install mysql`.
+2. Startup `mysql` services. For MacOS, run `brew services start mysql`.
 
+#  Load Sample Dataset of NBA Teams into MySQL
+1. Create sample database `hello_world`, and create a table `team_details` with the columns corresponding to the columns in `team.csv`. 
+2. Next, allow mysql to load local files via the `local-infile` option and read the csv file into the `team_details` table. 
 
-# For our test dataset the team names of NBA Teams
-1. Create the columns of the SQL Table i.e (id (primarykey, full_name VARCHAR(30), abbv CHAR(3), ... , Year_Founded INT)
-2. Now insert this dataframe to our newly created table using pandas
+This can be done by running the sql script `hello_world.sql`, via the command: `mysql --local-infile=1 -u root < hello_world.sql`
 
 # Example Query
-SELECT * FROM team_details WHERE state='TEXAS' 
-[result here]
+`SELECT abbreviation as abbr, nickname as name, city FROM hello_world.team_details WHERE state='TEXAS'`
+
++------+-----------+-------------+
+| abbr | name      | city        |
++------+-----------+-------------+
+| DAL  | Mavericks | Dallas      |
+| HOU  | Rockets   | Houston     |
+| SAS  | Spurs     | San Antonio |
++------+-----------+-------------+
