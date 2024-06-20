@@ -1,9 +1,7 @@
 Loading toy dataset into database...
 
 Successfully loaded... see sample user table
-id	username	password
-1	testuser1	mypassword
-2	auser2	hispassword
+ERROR 1049 (42000): Unknown database 'use toy_film_folios; select * from users;'
 
 Inserting new users to the user table...
 +----+----------------+------------------+

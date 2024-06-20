@@ -5,7 +5,7 @@ echo "Loading toy dataset into database..."
 mysql --local-infile=1 -u root < create_toy_db.sql
 
 echo -e "\nSuccessfully loaded... see sample user table"
-mysql --local-infile=1 -u root -e "use toy_film_folios; select * from users;"
+mysql --local-infile=1 -u root -e --table "use toy_film_folios; select * from users;"
 
 echo -e "\nInserting new users to the user table..."
 mysql --local-infile=1 -u root --table < create_user.sql
