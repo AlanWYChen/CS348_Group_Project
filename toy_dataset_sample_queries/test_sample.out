@@ -78,6 +78,15 @@ Finding all of a user's (user 1) likes
 +--------------+
 Barbie has been removed from user 1's likes!
 
+We can also count how many likes a movies has gotten
++--------------+-------+
+| title        | likes |
++--------------+-------+
+| Oppenheimer  |     3 |
+| Barbie       |     2 |
+| Forrest Gump |     2 |
++--------------+-------+
+
 Now let's aggregate ratings...
 +--------------+----------------+
 | title        | average_rating |
