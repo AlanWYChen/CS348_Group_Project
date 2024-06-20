@@ -34,11 +34,11 @@ LOAD DATA LOCAL INFILE 'movies.csv'
 DROP TABLE IF EXISTS likes;
 
 CREATE TABLE likes (
-  uid INT NOT NULL,
-  mid INT NOT NULL,
-  PRIMARY KEY (uid, mid),
-  FOREIGN KEY (uid) REFERENCES users(id),
-  FOREIGN KEY (mid) REFERENCES movies(id)
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
+  PRIMARY KEY (user_id, movie_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
 
 LOAD DATA LOCAL INFILE 'likes.csv'
@@ -49,15 +49,15 @@ LOAD DATA LOCAL INFILE 'likes.csv'
 DROP TABLE IF EXISTS ratings;
 
 CREATE TABLE ratings (
-  uid INT NOT NULL,
-  mid INT NOT NULL,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
   stars INT, 
 
   CONSTRAINT validRating check(stars IS NULL OR (stars >= 1 AND stars <= 5)),
 
-  PRIMARY KEY (uid, mid),
-  FOREIGN KEY (uid) REFERENCES users(id),
-  FOREIGN KEY (mid) REFERENCES movies(id)
+  PRIMARY KEY (user_id, movie_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
 
 LOAD DATA LOCAL INFILE 'ratings.csv'
@@ -68,13 +68,13 @@ LOAD DATA LOCAL INFILE 'ratings.csv'
 DROP TABLE IF EXISTS comments;
 
 CREATE TABLE comments (
-  uid INT NOT NULL,
-  mid INT NOT NULL,
+  id INT PRIMARY KEY,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
   content VARCHAR(256) NOT NULL,
 
-  PRIMARY KEY (uid, mid),
-  FOREIGN KEY (uid) REFERENCES users(id),
-  FOREIGN KEY (mid) REFERENCES movies(id)
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
 
 LOAD DATA LOCAL INFILE 'comments.csv'
