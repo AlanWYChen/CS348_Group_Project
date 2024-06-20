@@ -1,3 +1,5 @@
+-- Please discard this file 
+
 CREATE DATABASE IF NOT EXISTS hello_world; 
 
 use hello_world;
