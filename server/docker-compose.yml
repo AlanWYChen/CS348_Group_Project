@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    volumes:
+      - ./:/app
+  
+  migrate: &base_new_migrate
+    profiles: ["tools"]
+    image: migrate/migrate
+    entrypoint: 'migrate -database "cockroachdb://shriya:rPMjDTmEJiV-zMrtfSV6kg@cs348-project-15086.7tt.aws-us-east-1.cockroachlabs.cloud:26257/film-folios?sslmode=verify-full" -path /tmp/migrations'
+    command: up
+    volumes:
+      - ./migrations:/tmp/migrations
+
+  rollback-migrate:
+    <<: *base_new_migrate
+    command: down 1
+
+  create-migrate:
+    <<: *base_new_migrate
+    entrypoint: "migrate create -dir /tmp/migrations -seq -ext sql"
+    command: ""
+
+  fix-migrate:
+    <<: *base_new_migrate
+    entrypoint: "migrate -database 'cockroachdb://shriya:rPMjDTmEJiV-zMrtfSV6kg@cs348-project-15086.7tt.aws-us-east-1.cockroachlabs.cloud:26257/film-folios?sslmode=verify-full' -path /tmp/migrations force"
+    command: ""
+
