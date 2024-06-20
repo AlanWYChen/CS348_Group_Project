@@ -16,7 +16,7 @@ echo -e "Attempt failed as expected..."
 
 echo -e "\nNow let's work with our likes table..."
 echo -e "Here is the original likes table loaded from a csv file"
-mysql --local-infile=1 -u root -e "use toy_film_folios; select * from likes;"
+mysql --local-infile=1 -u root --table -e "use toy_film_folios; select * from likes;"
 echo -e "\nAdding likes..."
 mysql --local-infile=1 -u root --table < add_like.sql
 echo -e "\nFinding all of a user's (user 1) likes"

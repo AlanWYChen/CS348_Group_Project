@@ -24,11 +24,14 @@ Attempt failed as expected...
 
 Now let's work with our likes table...
 Here is the original likes table loaded from a csv file
-user_id	movie_id
-1	1
-2	1
-2	2
-1	3
++---------+----------+
+| user_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        1 |
+|       2 |        2 |
+|       1 |        3 |
++---------+----------+
 
 Adding likes...
 +---------+----------+
