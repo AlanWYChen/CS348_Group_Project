@@ -26,6 +26,8 @@ mysql --local-infile=1 -u root --table < delete_like.sql
 echo -e "\nFinding all of a user's (user 1) likes"
 mysql --local-infile=1 -u root --table < get_user_likes.sql
 echo -e "Barbie has been removed from user 1's likes!"
+echo -e "\nWe can also count how many likes a movies has gotten"
+mysql --local-infile=1 -u root --table < count_likes.sql
 
 echo -e "\nNow let's aggregate ratings..."
 mysql --local-infile=1 -u root --table < get_average_ratings.sql

@@ -21,25 +21,30 @@ If either of commands 2(run migrate), 3(rollback migrate) fails,and the next com
  
 To fix it, run this command, where the `<version_number> = the version number displayed in the error message`. Folow this commnad by 3(rollback-migrate), to return to the last stable version of the database. 
 
+## MySQL Setup
+1. Install `mysql` via package manager of choice. For example on MacOS, run `brew install mysql`.
+2. Startup `mysql` services. For MacOS, run `brew services start mysql`.
 
-##  Load Sample Dataset of Movies into cockroach db
--[] TODO: update this!! 
-1. Create sample database `hello_world`, and create a table `team_details` with the columns corresponding to the columns in `team.csv`. 
-2. Next, allow mysql to load local files via the `local-infile` option and read the csv file into the `team_details` table. 
+##  Load Toy Dataset of Movies Into Local MySQL Database and Run Sample Queries
+1.  To create the toy database and load the toy dataset, go to directory `toy_dataset_sample_queries` and run 
+```mysql --local-infile=1 -u root < create_toy_db.sql```
 
-This can be done by running the sql script `hello_world.sql`, via the command:
-```mysql --local-infile=1 -u root < hello_world.sql```
+All the sample queries can be run from a shell script from the top level directory:
+```./toy_dataset_sample_queries/test_sample_queries.sh```
+
+Any of the sample queries can be individually run using the following command:
+```mysql --local-infile=1 -u root --table < path_to_sample_queries.sql```
 
 ## Example Query
--[] TODO: Update this!!
-`SELECT abbreviation as abbr, nickname as name, city FROM hello_world.team_details WHERE state='TEXAS'`
+Let's run the `count_likes.sql` sample query.
+`mysql --local-infile=1 -u root --table < count_likes.sql`
 
 ```
-+------+-----------+-------------+
-| abbr | name      | city        |
-+------+-----------+-------------+
-| DAL  | Mavericks | Dallas      |
-| HOU  | Rockets   | Houston     |
-| SAS  | Spurs     | San Antonio |
-+------+-----------+-------------+
++--------------+-------+
+| title        | likes |
++--------------+-------+
+| Oppenheimer  |     3 |
+| Barbie       |     2 |
+| Forrest Gump |     2 |
++--------------+-------+
 ```
