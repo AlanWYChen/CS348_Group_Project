@@ -44,3 +44,14 @@ mysql --local-infile=1 -u root --table < get_movie_comments.sql
 
 echo -e "\nLet's get all dramas in our database!"
 mysql --local-infile=1 -u root --table < filter_movies_by_genre.sql
+
+echo -e "\nLet's add movies to some existing custom lists"
+mysql --local-infile=1 -u root --table < insert_movies_to_list.sql
+mysql --local-infile=1 -u root --table -e "use toy_film_folios; select * from listMovies;"
+
+echo -e "\nLet's add a custom list"
+mysql --local-infile=1 -u root --table < create_custom_list.sql
+mysql --local-infile=1 -u root --table -e "use toy_film_folios; select * from lists;"
+
+echo -e "\nWe can also delete a movie from a custom list"
+mysql --local-infile=1 -u root --table < delete_from_custom_list.sql

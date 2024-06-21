@@ -68,7 +68,7 @@ LOAD DATA LOCAL INFILE 'ratings.csv'
 DROP TABLE IF EXISTS comments;
 
 CREATE TABLE comments (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
   movie_id INT NOT NULL,
   content VARCHAR(256) NOT NULL,
@@ -81,3 +81,29 @@ LOAD DATA LOCAL INFILE 'comments.csv'
   INTO TABLE comments
   FIELDS TERMINATED BY '|'
   IGNORE 1 ROWS;
+
+DROP TABLE IF EXISTS lists;
+
+CREATE TABLE lists(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  list_name VARCHAR(128) NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+LOAD DATA LOCAL INFILE 'lists.csv'
+  INTO TABLE lists
+  FIELDS TERMINATED BY ','
+  IGNORE 1 ROWS;
+
+DROP TABLE IF EXISTS listMovies;
+
+CREATE TABLE listMovies (
+  list_id INT NOT NULL,
+  movie_id INT NOT NULL,
+
+  PRIMARY KEY(list_id, movie_id),
+  FOREIGN KEY(list_id) REFERENCES lists(id),
+  FOREIGN KEY(movie_id) REFERENCES movies(id)
+);

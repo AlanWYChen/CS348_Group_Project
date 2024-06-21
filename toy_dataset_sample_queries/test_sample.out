@@ -78,6 +78,15 @@ Finding all of a user's (user 1) likes
 +--------------+
 Barbie has been removed from user 1's likes!
 
+We can also count how many likes a movies has gotten
++--------------+-------+
+| title        | likes |
++--------------+-------+
+| Oppenheimer  |     3 |
+| Barbie       |     2 |
+| Forrest Gump |     2 |
++--------------+-------+
+
 Now let's aggregate ratings...
 +--------------+----------------+
 | title        | average_rating |
@@ -114,3 +123,31 @@ Let's get all dramas in our database!
 | Oppenheimer  |        2023 |
 | Forrest Gump |        1994 |
 +--------------+-------------+
+
+Let's add movies to some existing custom lists
++---------+----------+
+| list_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        2 |
+|       1 |        3 |
+|       2 |        3 |
++---------+----------+
+
+Let's add a custom list
++----+---------+--------------+
+| id | user_id | list_name    |
++----+---------+--------------+
+|  1 |       1 | favs         |
+|  2 |       2 | funny        |
+|  3 |       3 | a third list |
++----+---------+--------------+
+
+We can also delete a movie from a custom list
++---------+----------+
+| list_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        2 |
+|       1 |        3 |
++---------+----------+
