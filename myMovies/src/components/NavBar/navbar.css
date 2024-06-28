@@ -65,7 +65,7 @@ right: 1.5rem;
 right: 0;
 }
 
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 600px) {
     .nav__menu {
         position: fixed;
         top: 0;
@@ -80,7 +80,7 @@ right: 0;
     }
 }
 
-@media screen and (min-width: 1150px) {
+@media screen and (min-width: 600px) {
     .nav {
       height: calc(var(--header-height) + 1rem);
     }
