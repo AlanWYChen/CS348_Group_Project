@@ -20,4 +20,8 @@ export class movieLists extends Subject {
         this.notifyObservers();
     }
 
+    get CustomLists() {
+        return this.mlists;
+    }
+
 }

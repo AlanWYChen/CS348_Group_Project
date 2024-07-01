@@ -9,8 +9,8 @@ class ListGallery implements Observer {
 
         // i.e. update display
 
-        this.mlist.forEach(lst => {
-            
+        this.mlist.CustomLists.forEach(element => {
+            // draw icon and what not 
         });
 
     }
