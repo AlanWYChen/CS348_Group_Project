@@ -31,7 +31,7 @@ const Navbar = () => {
            </li>
            <li className="nav__item">
              <NavLink
-               to="/favorite"
+               to="/movie_list"
                className="nav__link"
              >
                Movie Lists
