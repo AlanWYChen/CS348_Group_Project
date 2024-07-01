@@ -1,0 +1,7 @@
+#bannerimage {
+    width: 100%;
+    background-image: url(https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg);
+    height: 230px;
+    background-color: purple;
+    background-position: center;
+}
