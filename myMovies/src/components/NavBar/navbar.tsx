@@ -45,11 +45,11 @@ const Navbar = () => {
            </li>
            <li className="nav__item">
              <NavLink
-               to="/favorite"
+               to="/all_movies"
                className="nav__link"
                onClick={closeMenuOnMobile}
              >
-               Movie Lists
+               All Movies
              </NavLink>
            </li>
            <li className="nav__item">

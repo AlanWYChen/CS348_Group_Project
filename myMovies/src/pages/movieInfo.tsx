@@ -1,113 +1,80 @@
-import React from "react";
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import "./movieInfo.css";
 
+interface Movie {
+  id: number;
+  title: string;
+  cast: string;
+  director: string;
+  synopsis: string;
+}
 
-const MovieInfo = () => {
+const movies: Movie[] = [
+  {
+    id: 1,
+    title: 'Inception',
+    cast: 'Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page',
+    director: 'Christopher Nolan',
+    synopsis: 'A thief who steals corporate secrets through the use of dream-sharing technology...',
+  },
+  {
+    id: 2,
+    title: 'The Dark Knight',
+    cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
+    director: 'Christopher Nolan',
+    synopsis: 'When the menace known as the Joker emerges from his mysterious past...',
+  },
+  {
+    id: 3,
+    title: 'Interstellar',
+    cast: 'Matthew McConaughey, Anne Hathaway, Jessica Chastain',
+    director: 'Christopher Nolan',
+    synopsis: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity’s survival...',
+  },
+];
 
-    
+type RouteParams = {
+  id: string;
+};
 
+const MovieInfo: React.FC = () => {
+  const { id } = useParams<RouteParams>();
 
-    return (
-        <div>
+  if (!id) return <div>Movie not found</div>;
 
-            <div id="bannerimage"></div>
+  const movie = movies.find(m => m.id === parseInt(id));
+  const [rating, setRating] = useState<number>(0);
 
-            <div style={{
-                textAlign: "left"
-            }}>
-                
-                <section>
-                    <h1 style={{
-                        fontSize: "48px"
-                    }}>Title</h1>
-                </section>
+  const handleRating = (rate: number) => {
+    setRating(rate);
+    // Here you would typically send the rating to a server
+    console.log(`User rated ${rate} stars for movie ${movie?.title}`);
+  };
 
-                <div style={{
-                    float: "left",
-                    display: "flex",
-                }}>
+  if (!movie) return <div>Movie not found</div>;
 
-                    <div style={{
-                        float: "left"
-                    }}>
-
-                        <h1>
-                            Rating
-                        </h1>
-
-                        <table style={{
-                            fontSize: "24px"
-                        }}>
-                            <tr>
-                                <td> ***** </td>
-                                <td> 32 </td>
-                            </tr>
-                            <tr>
-                                <td> **** </td>
-                                <td> 32 </td>
-                            </tr>
-                            <tr>
-                                <td> *** </td>
-                                <td> 32 </td>
-                            </tr>
-                            <tr>
-                                <td> ** </td>
-                                <td> 32 </td>
-                            </tr>
-                            <tr>
-                                <td> * </td>
-                                <td> 32 </td>
-                            </tr>
-                        </table>
-
-                    </div>
-
-                    <div style={{
-                        float: "right"
-                    }}>
-                        <p>
-                            <h1 style={{
-                                fontSize: "32px"
-                            }}>Synopsis</h1>
-
-                            <hr/>
-
-                            <p style={{
-                                fontSize: "16px"
-                            }}> test </p>
-                        </p>
-
-                        <p>
-                            <h1 style={{
-                                fontSize: "32px"
-                            }}> Director </h1>
-
-                            <hr/>
-
-                            <p style={{
-                                fontSize: "16px"
-                            }}> test </p>
-                        </p>
-
-                        <p>
-                            <h1 style={{
-                                fontSize: "32px"
-                            }}>Cast</h1>
-
-                            <hr/>
-
-                            <p style={{
-                                fontSize: "16px"
-                            }}> test </p>
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    );
+  return (
+    <div>
+      <h1>{movie.title}</h1>
+      <p><strong>Cast:</strong> {movie.cast}</p>
+      <p><strong>Director:</strong> {movie.director}</p>
+      <p><strong>Synopsis:</strong> {movie.synopsis}</p>
+      <div>
+        <strong>Rating:</strong>
+        {[1, 2, 3, 4, 5].map(star => (
+          <span
+            key={star}
+            style={{ cursor: 'pointer', color: star <= rating ? 'gold' : 'grey' }}
+            onClick={() => handleRating(star)}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default MovieInfo;

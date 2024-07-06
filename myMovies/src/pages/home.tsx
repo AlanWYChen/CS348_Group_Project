@@ -1,18 +1,9 @@
 import React from "react";
 
-const Home = () => {
+const Home: React.FC = () => {
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "centre",
-                alignItems: "centre",
-                height: "100vh",
-            }}
-        >
-            <h1>
-                
-            </h1>
+        <div id="home_content">
+        
         </div>
     );
 };
