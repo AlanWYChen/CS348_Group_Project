@@ -1,6 +1,7 @@
 import React, {useEffect, createContext, useContext, useState} from "react";
 import { BsAlignCenter } from "react-icons/bs";
 import { TbBackground } from "react-icons/tb";
+import { Link } from 'react-router-dom';
 
 const drawrectangle = {
     height: '25vh',
@@ -25,46 +26,57 @@ function hello() {
     console.log("this works");
 }
 
-
-// This will pull the uid from where it is stored and then use it to request the lid's associated
-// to that uid from the back end
-window.onload = function () {
-    if (window.location.pathname === '/movie_list') {
-        hello();
-        // Represents the user will need to figure out how to call this later but for now this is fine
-        let uid: number = 1;
-        // TODO: Make this the user who is logged in
-
-        // This is how many lists will need to be created this will be changed later once I have a json file
-        // but for now is just to resemble the blocks we need
-        let lists_made: number = 6;
-
-        createtable(uid, lists_made); 
-
-    }
+interface Saved {
+    id: number;
+    title:string;
 }
 
+const sList: Saved[] = [
+    {
+        id:0,
+        title:'Create New'
+    },
+    {
+      id: 1,
+      title: 'Liked'
+    },
+    {
+      id: 2,
+      title: 'Action'
+    },
+    {
+      id: 3,
+      title: 'Comedy'
+    },
+  ];
 
-const MovieList = () => {
+// This will pull the uid from where it is stored and then use it to request the lid's associated
+// to that uid from the back en
+
+// style={{
+//     display: "flex",
+//     justifyContent: "centre",
+//     alignItems: "centre",
+//     height: "100vh",
+// }
+// }
+const SavedList: React.FC = () => {
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "centre",
-                alignItems: "centre",
-                height: "100vh",
-            }
-        }
-        >
-            <h1>
-                Hello
-            </h1>
-            <div className="test">
+        <div        >
+            <h1>Saved Lists</h1>
+            <ul>
+                {sList.map(Saved => (
+                <li key={Saved.id}>
+                    <Link to={`/savedlists/${Saved.id}`}>{Saved.title}</Link>
+                </li>
+                ))}
+            </ul>
+            {/* <div className="test">
                 <div className="square" style={drawrectangle}></div>
 
-            </div>
+            </div> */}
 
-            <div className="container">
+            {/* <div className="container">
                 <div className="movie_table">
                     <table className="movie_list">
                         <tr>
@@ -77,11 +89,11 @@ const MovieList = () => {
 
                     </table>
                 </div>
-            </div>
+            </div> */}
 
 
         </div>
     );
 };
 
-export default MovieList;
+export default SavedList;

@@ -5,6 +5,8 @@ import MovieInfo from './pages/movieInfo';
 import NavBar from "./components/NavBar/navbar";
 import Home from "./pages/home";
 import AllMovies from './pages/AllMovies';
+import SavedList from './pages/savedlists';
+import ListInfo from './pages/viewlist';
 
 import "./App.css";
 
@@ -17,10 +19,12 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about-us" element= {<AllMovies />}/>
             <Route path="/all_movies" element={<MovieList />}/>
+            <Route path="/savedlists" element={<SavedList />}/>
           </Routes>
           <Routes>
             <Route path="/" element={<MovieList />} />
             <Route path="/movie/:id" element={<MovieInfo />} />
+            <Route path="/savedlists/:id" element={<ListInfo />} />
           </Routes>
         </main>
     </Router>

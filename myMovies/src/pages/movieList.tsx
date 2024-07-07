@@ -6,6 +6,7 @@ interface Movie {
   title: string;
 }
 
+
 const movies: Movie[] = [
   { id: 1, title: 'Inception' },
   { id: 2, title: 'The Dark Knight' },
