@@ -9,7 +9,6 @@ import SavedList from './savedlists';
 const AllMovies: React.FC = () => {
     return (
         <MovieList />
-
     );
 };
 
