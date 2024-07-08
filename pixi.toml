@@ -1,0 +1,17 @@
+[project]
+name = "CS348_Group_Project"
+version = "0.1.0"
+description = "Add a short description here"
+authors = ["Aumio Islam <a38islam@uwaterloo.ca>"]
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[tasks]
+
+[dependencies]
+flask = ">=3.0.3,<3.1"
+numpy = ">=2.0.0,<2.1"
+sqlalchemy = ">=2.0.31,<2.1"
+flask-sqlalchemy = ">=3.1.1,<3.2"
+mysql-connector-python = ">=8.3.0,<8.4"
+flask-migrate = ">=4.0.7,<4.1"
