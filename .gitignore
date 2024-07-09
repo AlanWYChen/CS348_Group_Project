@@ -1,0 +1,5 @@
+# pixi environments
+.pixi
+*.egg-info
+
+backend/sql/datasets/*.csv
