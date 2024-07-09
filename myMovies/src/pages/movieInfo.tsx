@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios, { AxiosRequestConfig, RawAxiosRequestHeaders }  from 'axios';
 
 import "./movieInfo.css";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 interface Movie {
   id: number;
@@ -41,6 +43,23 @@ type RouteParams = {
 
 const MovieInfo: React.FC = () => {
   const { id } = useParams<RouteParams>();
+
+  // TODO: Fix the routing --> commenting the axios request which gets the data 
+
+  // const [movieInfo, setMovieInfo] = useState<Movie | null>(null);
+  // useEffect(() => {
+  //   const config: AxiosRequestConfig = {
+  //   headers: {
+  //     'content-type': 'application/json',
+  //   } as RawAxiosRequestHeaders,
+  // };
+  //   const getMovieInfo = async () => {
+  //   const response = await axios.get(SERVER_URL + `/movie`, config);
+  //   console.log(response)
+  // };
+
+  // getMovieInfo(); 
+  // }, [id]) 
 
   if (!id) return <div>Movie not found</div>;
 
