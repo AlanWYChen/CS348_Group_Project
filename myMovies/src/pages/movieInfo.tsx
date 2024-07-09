@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios, { AxiosRequestConfig, RawAxiosRequestHeaders }  from 'axios';
+import axios from 'axios';
+import { AxiosRequestConfig, RawAxiosRequestHeaders }  from 'axios';
 
 import "./movieInfo.css";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL
@@ -16,7 +17,7 @@ interface Movie {
 const movies: Movie[] = [
   {
     id: 1,
-    title: 'Inception',
+    title: '[Dummy Movie Info Page] Inception',
     cast: 'Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page',
     director: 'Christopher Nolan',
     synopsis: 'A thief who steals corporate secrets through the use of dream-sharing technology...',
@@ -46,24 +47,22 @@ const MovieInfo: React.FC = () => {
 
   // TODO: Fix the routing --> commenting the axios request which gets the data 
 
-  // const [movieInfo, setMovieInfo] = useState<Movie | null>(null);
-  // useEffect(() => {
-  //   const config: AxiosRequestConfig = {
-  //   headers: {
-  //     'content-type': 'application/json',
-  //   } as RawAxiosRequestHeaders,
-  // };
-  //   const getMovieInfo = async () => {
-  //   const response = await axios.get(SERVER_URL + `/movie`, config);
-  //   console.log(response)
-  // };
+  const [movieInfo, setMovieInfo] = useState<Movie>();
 
-  // getMovieInfo(); 
-  // }, [id]) 
+  useEffect(() => {
+    const getMovieInfo = async () => {
+    const response = await axios.get(SERVER_URL + `/movie_info`);
+    console.log(response);
+    setMovieInfo(response.data);
+  };
+
+  getMovieInfo(); 
+  }, [id])
 
   if (!id) return <div>Movie not found</div>;
 
-  const movie = movies.find(m => m.id === parseInt(id));
+  let movie = movieInfo;
+  //movies.find(m => m.id === parseInt(id));
   const [rating, setRating] = useState<number>(0);
 
   const handleRating = (rate: number) => {
@@ -72,12 +71,14 @@ const MovieInfo: React.FC = () => {
     console.log(`User rated ${rate} stars for movie ${movie?.title}`);
   };
 
-  if (!movie) return <div>Movie not found</div>;
+  if (!movie) movie = movies.find(m => m.id === parseInt("1"));
+  if (!movie) return;
+  //return <div>Movie not found</div>;
 
   return (
     <div>
       <div>
-        <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner"/>
+        <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner"></img>
       </div>
       <h1>{movie.title}</h1>
       <p><strong>Cast:</strong> {movie.cast}</p>
