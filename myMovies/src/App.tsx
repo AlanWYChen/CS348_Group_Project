@@ -22,12 +22,12 @@ const App: React.FC = () => {
             <Route path="/all_movies" element={<AllMovies />}/>
             <Route path="/savedlists" element={<SavedList />}/>
           </Routes>
-          <Routes>
+        </main>
+        <Routes>
             <Route path="/" element={<MovieList />} />
             <Route path="/movie/:id" element={<MovieInfo />} />
             <Route path="/savedlists/:id" element={<ListInfo />} />
           </Routes>
-        </main>
     </Router>
   );
 };
