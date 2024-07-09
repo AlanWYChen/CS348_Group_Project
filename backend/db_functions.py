@@ -19,5 +19,5 @@ def db_get_movies_in_list(engine, list_id):
 
 # get all the movies from the DB and display in home page
 def db_get_all_movies(engine): 
-    all_movies = run_query(db, "SELECT title, id FROM movies ORDER BY title;", True)
+    all_movies = run_query(engine, "SELECT title, id FROM movies ORDER BY title;", True)
     return all_movies

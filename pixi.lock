@@ -14,6 +14,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/flask-cors-4.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/flask-migrate-4.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/flask-sqlalchemy-3.1.1-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/flask_cors-4.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/greenlet-3.0.3-py312h20a0b95_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-8.0.0-pyha770c72_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/importlib_resources-6.4.0-pyhd8ed1ab_0.conda
@@ -201,6 +202,23 @@ packages:
   license_family: BSD
   size: 26071
   timestamp: 1719325726809
+- kind: conda
+  name: flask_cors
+  version: 4.0.0
+  build: pyhd8ed1ab_0
+  subdir: noarch
+  noarch: python
+  url: https://conda.anaconda.org/conda-forge/noarch/flask_cors-4.0.0-pyhd8ed1ab_0.conda
+  sha256: f7316ced92b144244c9a4e29cf18f4fc3cb2269c12f1e715905c91bb279f1c64
+  md5: ee54b19f948680ed98645b3e5bee6e47
+  depends:
+  - flask >=0.9
+  - python >=3.6
+  - six
+  license: MIT
+  license_family: MIT
+  size: 17851
+  timestamp: 1718399263910
 - kind: conda
   name: greenlet
   version: 3.0.3
