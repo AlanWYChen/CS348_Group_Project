@@ -57,6 +57,9 @@ const MovieInfo: React.FC = () => {
 
   return (
     <div>
+      <div>
+        <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner"/>
+      </div>
       <h1>{movie.title}</h1>
       <p><strong>Cast:</strong> {movie.cast}</p>
       <p><strong>Director:</strong> {movie.director}</p>
