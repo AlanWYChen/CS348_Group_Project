@@ -1,8 +1,8 @@
 from flask import request, Request, Response, jsonify
 
-from backend import app, db
+from backend import app
 
-from backend.models.movie import Movie
+from db_functions import get_movie_by_id
 
 @app.route("/")
 def hello_world():
@@ -14,7 +14,7 @@ def get_movie_from_id():
         id = request.get_json()['id']
 
         if id:
-            movie = Movie.query.get(id)
+            movie = get_movie_by_id(id)
         else:
             return Response(status=204)
 

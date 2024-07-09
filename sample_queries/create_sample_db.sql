@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS test_db;
+DROP DATABASE IF EXISTS film_folio_sample;
 
-CREATE DATABASE test_db;
+CREATE DATABASE film_folio_sample;
 
-USE test_db;
+USE film_folio_sample;
 
 DROP TABLE IF EXISTS users;
 
@@ -12,24 +12,17 @@ CREATE TABLE users (
   password VARCHAR(128) NOT NULL
 );
 
-LOAD DATA LOCAL INFILE 'users.csv'
-  INTO TABLE users
-  FIELDS TERMINATED BY ','
-  IGNORE 1 ROWS;
-
 DROP TABLE IF EXISTS movies;
 
 CREATE TABLE movies (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  releaseYear INT,
+  release_year INT,
+  is_adult TINYINT(1),
+  external_id VARCHAR(16),
+  release_date DATE,
   title VARCHAR(256) NOT NULL,
   genres VARCHAR(256)
 );
-
-LOAD DATA LOCAL INFILE 'movies.csv'
-  INTO TABLE movies
-  FIELDS TERMINATED BY '|'
-  IGNORE 1 ROWS;
 
 DROP TABLE IF EXISTS likes;
 
@@ -40,13 +33,6 @@ CREATE TABLE likes (
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
-
-LOAD DATA LOCAL INFILE 'likes.csv'
-  INTO TABLE likes
-  FIELDS TERMINATED BY ','
-  IGNORE 1 ROWS;
-
-DROP TABLE IF EXISTS ratings;
 
 CREATE TABLE ratings (
   user_id INT NOT NULL,
@@ -60,11 +46,6 @@ CREATE TABLE ratings (
   FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
 
-LOAD DATA LOCAL INFILE 'ratings.csv'
-  INTO TABLE ratings
-  FIELDS TERMINATED BY ','
-  IGNORE 1 ROWS;
-
 DROP TABLE IF EXISTS comments;
 
 CREATE TABLE comments (
@@ -77,11 +58,6 @@ CREATE TABLE comments (
   FOREIGN KEY (movie_id) REFERENCES movies(id)
 );
 
-LOAD DATA LOCAL INFILE 'comments.csv'
-  INTO TABLE comments
-  FIELDS TERMINATED BY '|'
-  IGNORE 1 ROWS;
-
 DROP TABLE IF EXISTS lists;
 
 CREATE TABLE lists(
@@ -91,11 +67,6 @@ CREATE TABLE lists(
 
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
-LOAD DATA LOCAL INFILE 'lists.csv'
-  INTO TABLE lists
-  FIELDS TERMINATED BY ','
-  IGNORE 1 ROWS;
 
 DROP TABLE IF EXISTS listMovies;
 

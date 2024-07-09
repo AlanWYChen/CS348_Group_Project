@@ -6,7 +6,7 @@ services:
       - "8000:5000"
     volumes:
       - ./:/app
-  
+      
   migrate: &base_new_migrate
     profiles: ["tools"]
     image: migrate/migrate
