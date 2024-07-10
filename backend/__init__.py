@@ -5,11 +5,10 @@ from sqlalchemy import create_engine
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@/sample_film_folio'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@/production_film_folio'
 db = SQLAlchemy(app)
 CORS(app)
 migrate = Migrate(app, db)
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-
 
 from backend import routes 

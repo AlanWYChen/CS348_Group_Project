@@ -8,6 +8,8 @@ import AllMovies from "./pages/AllMovies";
 import SavedList from "./pages/savedlists";
 import ListInfo from "./pages/viewlist";
 import About from "./pages/about";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
 
 import "./App.css";
 
@@ -21,11 +23,13 @@ const App: React.FC = () => {
 					<Route path="/about-us" element={<About />} />
 					<Route path="/all_movies" element={<AllMovies />} />
 					<Route path="/savedlists" element={<SavedList />} />
+					<Route path="/login" element={<Login />} />
 				</Routes>
 			</main>
 			<Routes>
 				<Route path="/movie/:id" element={<MovieInfo />} />
 				<Route path="/savedlists/:id" element={<ListInfo />} />
+				<Route path="/dashboard" element={<Dashboard />} />
 			</Routes>
 		</Router>
 	);

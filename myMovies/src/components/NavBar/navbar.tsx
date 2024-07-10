@@ -62,7 +62,7 @@ const Navbar = () => {
              </NavLink>
            </li>
            <li className="nav__item">
-             <NavLink to="/get-started" 
+             <NavLink to="/login" 
              className="nav__link nav__cta" 
              onClick={closeMenuOnMobile}>
                Sign In
