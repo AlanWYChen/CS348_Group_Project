@@ -2,30 +2,21 @@
 
 ## Setting up the Devlopment Environment 
 
-Run the command `docker-compose up` to create a container with the backend services up and running
+### Backend Dev Environment Setup
+1. We use pixi to manage our python packages!
+```brew install pixi```
+2. Our `pixi.toml` file in the repo stores our python dependencies, so we can reproduce the necessary environment.
+```pixi install```
+3. Load the virtual python environment.
+```eval $(pixi shell-hook)```
 
-## Using Migrations 
+* Note this is configured for Apple Silicon. You may have to add your OS to `pixi.toml`
 
-1. `docker-compose --profile tools run create-migrate <name-of-migration>`. This command should be used to create a new migration. 
-It will generate 2 files (up and down) in the migrations folder named as follows, `<sequence-number>_<name-of-migration>.up.sql`, `<sequence-number>_<name-of-migration>.down.sql`. 
-The up.sql file is where you write the SQL script for the action you want to take
-The down.sql is where you write the script for undoing the action taken by the counterpart .up file
-
-2. Running the command `docker-compose --profile tools run migrate` will run all SQL migrations over the film-folio database. 
-**_NOTE:_**  All the migrations will be run IN ORDER.
-
-3. `docker-compose --profile tools run rollback-migrate` undoes the changes introduced by the last migration (i.e, the last numbered file in the migrations folder) and rolls back by 1 version. To rollback n versions, need to run this command n times. 
-
-4. `docker-compose --profile tools run fix-migrate <version-number>` 
-If either of commands 2(run migrate), 3(rollback migrate) fails,and the next command you run gives 'Dirty Database' error, indicates your database has been corrupted. 
- 
-To fix it, run this command, where the `<version_number> = the version number displayed in the error message`. Folow this commnad by 3(rollback-migrate), to return to the last stable version of the database. 
-
-## MySQL Setup
+### MySQL Setup
 1. Install `mysql` via package manager of choice. For example on MacOS, run `brew install mysql`.
 2. Startup `mysql` services. For MacOS, run `brew services start mysql`.
 
-## Creating the Dataset:
+### Creating the Dataset:
 
 The following links were used to pull the data used in this application:
 1. https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset 
@@ -37,7 +28,7 @@ b. The sample data is 3 users who have rated, liked, and commented on movies. Wi
 
 c. The production is all the movies from the following join with all of our group members as users who each has a respected list with movies. 
 
-##  Load Toy Dataset of Movies Into Local MySQL Database and Run Sample Queries
+###  Load Toy Dataset of Movies Into Local MySQL Database and Run Sample Queries
 1.  To create the toy database and load the toy dataset, go to directory `toy_dataset_sample_queries` and run 
 ```mysql --local-infile=1 -u root < create_toy_db.sql```
 
@@ -46,6 +37,18 @@ All the sample queries can be run from a shell script from the top level directo
 
 Any of the sample queries can be individually run using the following command:
 ```mysql --local-infile=1 -u root --table < path_to_sample_queries.sql```
+
+### Load Sample and Production Datasets into Sample and Production Databases
+1. Create the database and tables.
+```mysql -uroot < backend/sql/create_sample_db.sql```
+* Can create production database with `create_production_db.sql` in the same directory. In general, the steps are the same, just replacing sample with production in the script names. For brevity we will just follow the instructions for setting up the sample database.
+
+2. Populate the tables.
+```python backend/scripts/populate_tables.py --path backend/sql/datasets```
+By default, this populates the sample database. We can add a `--prod` flag to populate the production database.
+```python backend/scripts/populate_tables.py --path backend/sql/datasets --prod```
+
+3. Run the SQL scripts in `backend/scripts` to populate tables that don't depend on the dataset (ie user data, likes, comments etc).
 
 # Front End Development
 
@@ -59,13 +62,13 @@ d. allmovies.tsx - contains the code for all the movies in the db (will be filte
 
 in backend contains the code used for the endpoints
 a. db_functions.py contains the native sql queries 
-b. routes.py contains the crud operations
+b. db_connect.py contains a function that executes the queries in db_functions.py
+c. routes.py contains the crud operations
 
 
-## Example Query
+## Example Query on Toy Dataset
 Let's run the `count_likes.sql` sample query.
 `mysql --local-infile=1 -u root --table < count_likes.sql`
-
 ```
 +--------------+-------+
 | title        | likes |
