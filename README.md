@@ -27,15 +27,15 @@ To fix it, run this command, where the `<version_number> = the version number di
 
 ## Creating the Dataset:
 
-The following links were used to pull the data used in this application:
-https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset
-https://developer.imdb.com/non-commercial-datasets/#titleakastsvgz 
+The following links were used to pull the data used in this application:< br / >
+https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset < br / >
+https://developer.imdb.com/non-commercial-datasets/#titleakastsvgz < br / >
 
-The sample movies are any movie that contains the key word Iron man in the title of the movie. All the data manipulations are in the DataCleanup.R file and uses the above two links to clean up the IMDB dataset since there are a lot of non-english language movies present. 
+The sample movies are any movie that contains the key word Iron man in the title of the movie. All the data manipulations are in the DataCleanup.R file and uses the above two links to clean up the IMDB dataset since there are a lot of non-english language movies present.  < br / >
 
-The sample data is 3 users who have rated, liked, and commented on movies. With some of the users having a list they have created to save some movies.
+The sample data is 3 users who have rated, liked, and commented on movies. With some of the users having a list they have created to save some movies. < br / >
 
-The production is all the movies from the following join with all of our group members as users who each has a respected list with movies. 
+The production is all the movies from the following join with all of our group members as users who each has a respected list with movies.  < br / >
 
 ##  Load Toy Dataset of Movies Into Local MySQL Database and Run Sample Queries
 1.  To create the toy database and load the toy dataset, go to directory `toy_dataset_sample_queries` and run 
@@ -49,16 +49,16 @@ Any of the sample queries can be individually run using the following command:
 
 # Front End Development
 
-in myMovies/src/pages contains the pages used for the front end
-savedlist.tsx - contains the code required to run the Saved Lists tab
-viewlist.tsx - contains the code required to view a list from the list click on saved lists page
-movieinfo.tsx - contains the code required to view the information about a movie
-allmovies.tsx - contains the code for all the movies in the db (will be filtered based on user)
+in myMovies/src/pages contains the pages used for the front end < br / >
+savedlist.tsx - contains the code required to run the Saved Lists tab < br / >
+viewlist.tsx - contains the code required to view a list from the list click on saved lists page < br / >
+movieinfo.tsx - contains the code required to view the information about a movie < br / >
+allmovies.tsx - contains the code for all the movies in the db (will be filtered based on user) < br / >
 
 # Endpoints
 
-in backend contains the code used for the endpoints
-db_functions.py contains the native sql queries
+in backend contains the code used for the endpoints < br / >
+db_functions.py contains the native sql queries < br / >
 routes.py contains the crud operations
 
 
