@@ -47,6 +47,21 @@ All the sample queries can be run from a shell script from the top level directo
 Any of the sample queries can be individually run using the following command:
 ```mysql --local-infile=1 -u root --table < path_to_sample_queries.sql```
 
+# Front End Development
+
+in myMovies/src/pages contains the pages used for the front end
+savedlist.tsx - contains the code required to run the Saved Lists tab
+viewlist.tsx - contains the code required to view a list from the list click on saved lists page
+movieinfo.tsx - contains the code required to view the information about a movie
+allmovies.tsx - contains the code for all the movies in the db (will be filtered based on user)
+
+# Endpoints
+
+in backend contains the code used for the endpoints
+db_functions.py contains the native sql queries
+routes.py contains the crud operations
+
+
 ## Example Query
 Let's run the `count_likes.sql` sample query.
 `mysql --local-infile=1 -u root --table < count_likes.sql`
