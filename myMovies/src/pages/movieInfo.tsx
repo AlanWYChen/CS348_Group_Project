@@ -9,32 +9,32 @@ const SERVER_URL = import.meta.env.VITE_SERVER_URL
 interface Movie {
   id: number;
   title: string;
-  cast: string;
-  director: string;
-  synopsis: string;
+  //cast: string;
+  //director: string;
+  //synopsis: string;
 }
 
 const movies: Movie[] = [
   {
     id: 1,
     title: '[Dummy Movie Info Page] Inception',
-    cast: 'Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page',
-    director: 'Christopher Nolan',
-    synopsis: 'A thief who steals corporate secrets through the use of dream-sharing technology...',
+    //cast: 'Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page',
+    //director: 'Christopher Nolan',
+    //synopsis: 'A thief who steals corporate secrets through the use of dream-sharing technology...',
   },
   {
     id: 2,
     title: 'The Dark Knight',
-    cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
-    director: 'Christopher Nolan',
-    synopsis: 'When the menace known as the Joker emerges from his mysterious past...',
+    //cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
+    //director: 'Christopher Nolan',
+    //synopsis: 'When the menace known as the Joker emerges from his mysterious past...',
   },
   {
     id: 3,
     title: 'Interstellar',
-    cast: 'Matthew McConaughey, Anne Hathaway, Jessica Chastain',
-    director: 'Christopher Nolan',
-    synopsis: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity’s survival...',
+    //cast: 'Matthew McConaughey, Anne Hathaway, Jessica Chastain',
+    //director: 'Christopher Nolan',
+    //synopsis: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity’s survival...',
   },
 ];
 
@@ -45,8 +45,21 @@ type RouteParams = {
 const MovieInfo: React.FC = () => {
   const { id } = useParams<RouteParams>();
 
+  const [movies, setMovies] = useState<Movie[]>();
+
+	useEffect(() => {
+		const getMovies = async () => {
+			const response = await axios.get(SERVER_URL + "/all_movies");
+			console.log(response.data);
+			setMovies(response.data);
+		};
+
+		getMovies();
+	}, []);
+
   // TODO: Fix the routing --> commenting the axios request which gets the data 
 
+  /*
   const [movieInfo, setMovieInfo] = useState<Movie>();
 
   useEffect(() => {
@@ -58,10 +71,11 @@ const MovieInfo: React.FC = () => {
 
   getMovieInfo(); 
   }, [id])
+  */
 
   if (!id) return <div>Movie not found</div>;
 
-  let movie = movieInfo;
+  let movie = movies?.find(m => m.id === parseInt(id));
   //movies.find(m => m.id === parseInt(id));
   const [rating, setRating] = useState<number>(0);
 
@@ -71,7 +85,6 @@ const MovieInfo: React.FC = () => {
     console.log(`User rated ${rate} stars for movie ${movie?.title}`);
   };
 
-  if (!movie) movie = movies.find(m => m.id === parseInt("1"));
   if (!movie) return;
   //return <div>Movie not found</div>;
 
@@ -81,9 +94,9 @@ const MovieInfo: React.FC = () => {
         <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner"></img>
       </div>
       <h1>{movie.title}</h1>
-      <p><strong>Cast:</strong> {movie.cast}</p>
-      <p><strong>Director:</strong> {movie.director}</p>
-      <p><strong>Synopsis:</strong> {movie.synopsis}</p>
+      <p><strong>Cast:</strong> {"[WIP]"}</p>
+      <p><strong>Director:</strong> {"[WIP]"}</p>
+      <p><strong>Synopsis:</strong> {"[WIP]"}</p>
       <div>
         <strong>Rating:</strong>
         {[1, 2, 3, 4, 5].map(star => (
