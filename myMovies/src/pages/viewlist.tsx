@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 // import "./movieInfo.css";
 
@@ -39,7 +40,12 @@ const ListInfo: React.FC = () => {
   return (
     <div>
       <h1>{list.id}</h1>
-      <p>List of Movies in List {list.title}</p>
+      {list.title &&
+					list.title.map((movie) => (
+						<li key={movie}>
+							<Link to={"/"}>{movie}</Link>
+						</li>
+					))}
     </div>
   );
 };
