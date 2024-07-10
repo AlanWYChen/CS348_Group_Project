@@ -27,11 +27,11 @@ To fix it, run this command, where the `<version_number> = the version number di
 
 ## Creating the Dataset:
 
-The following links were used to pull the data used in this application:< br / >
-https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset < br / >
-https://developer.imdb.com/non-commercial-datasets/#titleakastsvgz < br / >
+The following links were used to pull the data used in this application:<br/>
+https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset <br/>
+https://developer.imdb.com/non-commercial-datasets/#titleakastsvgz <br/>
 
-The sample movies are any movie that contains the key word Iron man in the title of the movie. All the data manipulations are in the DataCleanup.R file and uses the above two links to clean up the IMDB dataset since there are a lot of non-english language movies present.  < br / >
+The sample movies are any movie that contains the key word Iron man in the title of the movie. All the data manipulations are in the DataCleanup.R file and uses the above two links to clean up the IMDB dataset since there are a lot of non-english language movies present.  <br/>
 
 The sample data is 3 users who have rated, liked, and commented on movies. With some of the users having a list they have created to save some movies. < br / >
 
