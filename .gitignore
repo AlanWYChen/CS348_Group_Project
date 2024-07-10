@@ -1,0 +1,11 @@
+# pixi environments
+.pixi
+*.egg-info
+
+backend/sql/datasets/*.csv
+backend/__pycache__/
+backend/backend-venv/
+
+myMovies/node_modules/
+
+server/__pycache__/

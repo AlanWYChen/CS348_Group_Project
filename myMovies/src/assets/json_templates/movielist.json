@@ -1,0 +1,24 @@
+{
+    "list": [
+        {
+            "id": "1",
+            "name": "Apple"
+        },
+        {
+            "id": "2",
+            "name": "Microsoft"
+        },
+        {
+            "id": "3",
+            "name": "Nvidia"
+        },
+        {
+            "id": "4",
+            "name": "Amazon"
+        },
+        {
+            "id": "5",
+            "name": "Meta"
+        }
+    ]
+}

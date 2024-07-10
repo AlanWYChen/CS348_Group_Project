@@ -1,0 +1,153 @@
+Loading toy dataset into database...
+
+Successfully loaded... see sample user table
++----+-----------+-------------+
+| id | username  | password    |
++----+-----------+-------------+
+|  1 | testuser1 | mypassword  |
+|  2 | auser2    | hispassword |
++----+-----------+-------------+
+
+Inserting new users to the user table...
++----+----------------+------------------+
+| id | username       | password         |
++----+----------------+------------------+
+|  1 | testuser1      | mypassword       |
+|  2 | auser2         | hispassword      |
+|  3 | inserted_user1 | thepassword      |
+|  4 | inserted_user2 | another password |
++----+----------------+------------------+
+
+Now attempting to insert duplicate username into users table...
+ERROR 1062 (23000) at line 3: Duplicate entry 'inserted_user1' for key 'users.username'
+Attempt failed as expected...
+
+Now let's work with our likes table...
+Here is the original likes table loaded from a csv file
++---------+----------+
+| user_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        1 |
+|       2 |        2 |
+|       1 |        3 |
++---------+----------+
+
+Adding likes...
++---------+----------+
+| user_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        1 |
+|       3 |        1 |
+|       1 |        2 |
+|       2 |        2 |
+|       3 |        2 |
+|       1 |        3 |
+|       3 |        3 |
++---------+----------+
+
+Finding all of a user's (user 1) likes
++--------------+
+| liked_movies |
++--------------+
+| Oppenheimer  |
+| Barbie       |
+| Forrest Gump |
++--------------+
+
+Removing like (1,2)...
++---------+----------+
+| user_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        1 |
+|       3 |        1 |
+|       2 |        2 |
+|       3 |        2 |
+|       1 |        3 |
+|       3 |        3 |
++---------+----------+
+
+Finding all of a user's (user 1) likes
++--------------+
+| liked_movies |
++--------------+
+| Oppenheimer  |
+| Forrest Gump |
++--------------+
+Barbie has been removed from user 1's likes!
+
+We can also count how many likes a movies has gotten
++--------------+-------+
+| title        | likes |
++--------------+-------+
+| Oppenheimer  |     3 |
+| Barbie       |     2 |
+| Forrest Gump |     2 |
++--------------+-------+
+
+Now let's aggregate ratings...
++--------------+----------------+
+| title        | average_rating |
++--------------+----------------+
+| Oppenheimer  |         5.0000 |
+| Barbie       |         4.0000 |
+| Forrest Gump |         4.0000 |
++--------------+----------------+
+Adding more ratings...
+Notice the average ratings have changed
++--------------+----------------+
+| title        | average_rating |
++--------------+----------------+
+| Oppenheimer  |         4.6667 |
+| Barbie       |         4.0000 |
+| Forrest Gump |         3.0000 |
++--------------+----------------+
+Let's make sure that our constraint for ratings hold by inserting a rating > 5
+ERROR 3819 (HY000) at line 3: Check constraint 'validRating' is violated.
+Attempt failed as expected...
+
+Let's get all comments for Barbie (movie 2)!
++--------+-----------+------------------------------------------+
+| title  | username  | content                                  |
++--------+-----------+------------------------------------------+
+| Barbie | testuser1 | Barbie was okay.                         |
+| Barbie | auser2    | Barbie was better than Oppenheimer 1000% |
++--------+-----------+------------------------------------------+
+
+Let's get all dramas in our database!
++--------------+-------------+
+| title        | releaseYear |
++--------------+-------------+
+| Oppenheimer  |        2023 |
+| Forrest Gump |        1994 |
++--------------+-------------+
+
+Let's add movies to some existing custom lists
++---------+----------+
+| list_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        2 |
+|       1 |        3 |
+|       2 |        3 |
++---------+----------+
+
+Let's add a custom list
++----+---------+--------------+
+| id | user_id | list_name    |
++----+---------+--------------+
+|  1 |       1 | favs         |
+|  2 |       2 | funny        |
+|  3 |       3 | a third list |
++----+---------+--------------+
+
+We can also delete a movie from a custom list
++---------+----------+
+| list_id | movie_id |
++---------+----------+
+|       1 |        1 |
+|       2 |        2 |
+|       1 |        3 |
++---------+----------+
