@@ -1,0 +1,147 @@
+.saved-list-container {
+	display: flex;
+	height: 100vh;
+	flex-direction: row;
+}
+
+.saved-list-sidebar {
+	flex: 1;
+	padding: 20px;
+	border-right: 1px solid #ddd;
+	box-sizing: border-box;
+}
+
+.saved-list-content {
+	flex: 2;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.search-bar {
+	margin-bottom: 20px;
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 1em;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+.edit-button {
+	width: auto;
+	background-color: #f0ad4e;
+	color: white;
+}
+
+.edit-button:hover {
+	background-color: #ec971f;
+}
+
+.saved-list-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+}
+
+.saved-list-box {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	overflow: hidden;
+	width: 200px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s;
+}
+
+.saved-list-box:hover {
+	transform: scale(1.05);
+}
+
+.saved-list-title {
+	padding: 10px;
+	font-size: 1.1em;
+	background-color: #f8f8f8;
+	border-top: 1px solid #ddd;
+	color: black;
+}
+
+.saved-list-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.movie-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+}
+
+.movie-box {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	overflow: hidden;
+	width: 200px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s;
+	position: relative; /* Added to position children absolutely */
+}
+
+.movie-box:hover {
+	transform: scale(1.05);
+}
+
+.movie-image {
+	width: 100%;
+	height: auto;
+}
+
+.movie-title {
+	padding: 10px;
+	font-size: 1.1em;
+	background-color: #f8f8f8;
+	border-top: 1px solid #ddd;
+	color: black;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative; /* Ensure positioning context for .remove-button */
+}
+
+.remove-button {
+	font-size: 10px;
+	padding: 4px 8px;
+	background-color: #f44336;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	width: auto;
+	text-align: center;
+	height: auto;
+	position: absolute; /* Position absolutely within .movie-title */
+	top: 50%;
+	right: 10px; /* Position to the right side */
+	transform: translateY(-50%); /* Center vertically */
+}
+
+.remove-button:hover {
+	background-color: #c62828;
+}

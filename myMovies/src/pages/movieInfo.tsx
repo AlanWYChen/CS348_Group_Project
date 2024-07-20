@@ -83,6 +83,9 @@ const MovieInfo: React.FC = () => {
     setRating(rate);
     // Here you would typically send the rating to a server
     console.log(`User rated ${rate} stars for movie ${movie?.title}`);
+
+    
+
   };
 
   if (!movie) return;

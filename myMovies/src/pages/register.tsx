@@ -1,31 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../components/authContext';
-import './login.css';
+import './register.css';
 
-const Login: React.FC = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    // Simulate login logic
-    if (email === 'test@example.com' && password === 'password123') {
-      login();
-      navigate('/dashboard');
+    // Simulate registration logic
+    if (password === confirmPassword) {
+      // Handle successful registration
+      navigate('/login'); // Redirect to login after successful registration
     } else {
-      setError('Invalid email or password');
+      setError('Passwords do not match');
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Login</h2>
+    <div className="register-container">
+      <div className="register-form">
+        <h2>Register</h2>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div>
@@ -48,14 +46,21 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          <button type="submit">Login</button>
+          <div>
+            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Register</button>
         </form>
-        <p className="register-link">
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

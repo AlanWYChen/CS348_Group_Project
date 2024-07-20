@@ -21,6 +21,7 @@ color: var(--first-color);
 transition: color 0.4s;
 font-size: var(--h2-font-size);
 font-family: var(--second-font);
+padding: 10px;
 }
 
 .nav__toggle,
