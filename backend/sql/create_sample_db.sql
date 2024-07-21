@@ -65,7 +65,8 @@ CREATE TABLE lists(
   user_id INT NOT NULL,
   list_name VARCHAR(128) NOT NULL,
 
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  UNIQUE (user_id ,list_name)
 );
 
 DROP TABLE IF EXISTS listMovies;
