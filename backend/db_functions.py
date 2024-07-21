@@ -6,7 +6,7 @@ def db_get_all_movies(engine):
     return all_movies
 
 def db_get_movie_by_id(engine, movie_id): 
-    movie_info = run_query(engine, "SELECT * from movies WHERE id=%s;" % (movie_id), True)
+    movie_info = run_query(engine, f"SELECT id, release_date, title, genres from movies WHERE id={movie_id};", True)
     return movie_info
 
 #get all the movies from a given list_id

@@ -30,7 +30,7 @@ const MovieInfo: React.FC = () => {
   useEffect(() => {
     const getMovie = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/movie/${id}`);
+        const response = await axios.get(`${SERVER_URL}/movie/?id=${id}`);
         setMovie(response.data);
       } catch (error) {
         console.error("Error fetching movie:", error);

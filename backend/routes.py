@@ -10,19 +10,29 @@ def hello_world():
 
 @app.route("/movie", methods=['GET'])
 def get_movie_from_id():
-    id = request.get_json()['id']
-
-    if id:
+    
+    #Check if movie ID passed
+    try: 
+        id = request.args['id']
         print(id)
-        print(engine)
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Missing user id',
+        })
+        return retval
+    
+    #TODO: Add checks for valid movie id in DB? or here? 
+    try: 
         movie = db_get_movie_by_id(engine, id)
-    else:
-        return Response(status=204)
-
-    if movie:
+        print(movie)
         return jsonify(movie)
+    except:
+        retval = jsonify({
+            'message': 'DB Error: Failed to get movie Info ',
+        })
+        return retval, 500
 
-    return Response(status=204)
+    
 
 @app.route("/all_movies", methods=["GET"])
 def get_all_movies():
@@ -34,16 +44,22 @@ def get_all_movies():
 
 @app.route("/movies_in_list", methods=["GET"])
 def get_movies_by_list_id():
-    list_id = request.get_json()['list_id']
-    if list_id:
+    try: 
+        list_id = request.args['list_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Missing list id',
+        })
+        return retval
+    
+    try: 
         movies = db_get_movies_in_list(engine, list_id)
-    else:
-        return Response(status=204)
-
-    if movies:
         return jsonify(movies)
-
-    return Response(status=204)
+    except:
+        retval = jsonify({
+            'message': 'DB Error: Failed to get movies in list',
+        })
+        return retval, 500 
 
 @app.route("/user_lists", methods=["GET"])
 def get_user_lists():
