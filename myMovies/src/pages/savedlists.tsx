@@ -5,16 +5,16 @@ import "./savedLists.css";
 interface Movie {
 	id: number;
 	title: string;
-	imageUrl: string; // Assuming this property exists
+	imageUrl: string;
 }
 
-interface Saved {
+interface List {
 	id: number;
 	title: string[];
 	movies: Movie[];
 }
 
-const initialLists: Saved[] = [
+const initialLists: List[] = [
 	{
 		id: 1,
 		title: ["Liked"],
@@ -27,8 +27,8 @@ const initialLists: Saved[] = [
 ];
 
 const SavedList: React.FC = () => {
-	const [sList, setSList] = useState<Saved[]>(initialLists);
-	const [selectedList, setSelectedList] = useState<Saved | null>(null);
+	const [sList, setSList] = useState<List[]>(initialLists);
+	const [selectedList, setSelectedList] = useState<List | null>(null);
 	const [newListTitle, setNewListTitle] = useState<string>("");
 	const [editMode, setEditMode] = useState<boolean>(false);
 

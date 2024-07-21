@@ -1,7 +1,114 @@
-#bannerimage {
-    width: 100%;
-    background-image: url(https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg);
-    height: 230px;
-    background-color: purple;
-    background-position: center;
+.movie-info-container {
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  padding: 20px;
+}
+
+.movie-info {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.movie-info .banner img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px 8px 0 0;
+}
+
+.movie-info h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.movie-info p {
+  font-size: 1em;
+  margin: 10px 0;
+  color: white;
+}
+
+.movie-info .rating {
+  margin: 20px 0;
+}
+
+.movie-info .rating strong {
+  display: block;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.movie-info .rating-input {
+  margin: 10px 0;
+}
+
+.movie-info .rating span {
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.movie-info .rating span:hover {
+  color: gold;
+}
+
+.movie-info .rating span.gold {
+  color: gold;
+}
+
+.movie-info .rating-list {
+  margin: 10px 0;
+}
+
+.movie-info .rating-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.movie-info .rating-list li {
+  color: white;
+}
+
+.movie-info .comments {
+  margin-top: 30px;
+}
+
+.movie-info .comments h2 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.movie-info .comment-form input,
+.movie-info .comment-form textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.movie-info .comment-form button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.movie-info .comment-form button:hover {
+  background-color: #0056b3;
+}
+
+.movie-info .comment-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.movie-info .comment-list li {
+  color: white;
+  margin-bottom: 10px;
 }
