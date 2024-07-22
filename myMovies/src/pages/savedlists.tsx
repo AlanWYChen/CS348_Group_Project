@@ -81,9 +81,6 @@ const SavedList: React.FC = () => {
 					className="search-bar"
 				/>
 				<button onClick={handleCreateList}>Create New List</button>
-				<button onClick={toggleEditMode} className="edit-button">
-					{editMode ? "Done" : "Edit"}
-				</button>
 				<div className="saved-list-grid">
 					{sList.map((saved) => (
 						<div className="saved-list-box" key={saved.id}>
@@ -101,7 +98,12 @@ const SavedList: React.FC = () => {
 			<div className="saved-list-content">
 				{selectedList ? (
 					<div>
-						<h1>{selectedList.title[0]}</h1>
+						<div className="title-button-container">
+							<button onClick={toggleEditMode} className="edit-button">
+								{editMode ? "Done" : "Edit"}
+							</button>
+							<h1 className="list-title">{selectedList.title[0]}</h1>
+						</div>
 						<div className="movie-grid">
 							{selectedList.movies.map((movie, index) => (
 								<div className="movie-box" key={movie.id}>
@@ -112,16 +114,16 @@ const SavedList: React.FC = () => {
 											className="movie-image"
 										/>
 										<div className="movie-title">
-                      {movie.title}
-                      {editMode && (
-                      <button
-                        className="remove-button"
-                        onClick={() => handleRemoveMovie(movie.title)}
-                      >
-                        Remove
-                      </button>
-                    )}
-                      </div>
+											{movie.title}
+											{editMode && (
+												<button
+													className="remove-button"
+													onClick={() => handleRemoveMovie(movie.title)}
+												>
+													Remove
+												</button>
+											)}
+										</div>
 									</Link>
 								</div>
 							))}

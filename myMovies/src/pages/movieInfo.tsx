@@ -3,16 +3,25 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import "./movieInfo.css";
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 interface Movie {
   id: number;
   title: string;
-  cast: string;
-  director: string;
-  synopsis: string;
-  ratings: number[]; // Array to store multiple ratings
-  comments: { user: string; text: string }[]; // Array to store comments
+  release_date: string;
+  genre: string;
+}
+
+interface Rating {
+  id: number;
+  rating: number;
+}
+
+interface Comment {
+  id: number;
+  user: string;
+  text: string;
 }
 
 type RouteParams = {
@@ -22,7 +31,9 @@ type RouteParams = {
 const MovieInfo: React.FC = () => {
   const { id } = useParams<RouteParams>();
 
-  const [movie, setMovie] = useState<Movie | null>(null);
+  const [movie, setMovie] = useState<Movie[]>([]);
+  const [ratings, setRatings] = useState<Rating[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [userRating, setUserRating] = useState<number>(0);
   const [newComment, setNewComment] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
@@ -30,50 +41,77 @@ const MovieInfo: React.FC = () => {
   useEffect(() => {
     const getMovie = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/movie/?id=${id}`);
+        const response = await axios.get<Movie[]>(`${SERVER_URL}/movie?id=${id}`);
+        console.log(response);
         setMovie(response.data);
       } catch (error) {
         console.error("Error fetching movie:", error);
       }
     };
 
+    const getRatings = async () => {
+      try {
+        const response = await axios.get<Rating[]>(`${SERVER_URL}/movies/${id}/ratings`);
+        setRatings(response.data);
+      } catch (error) {
+        console.error("Error fetching ratings:", error);
+      }
+    };
+
+    const getComments = async () => {
+      try {
+        const response = await axios.get<Comment[]>(`${SERVER_URL}/movies/${id}/comments`);
+        setComments(response.data);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
     getMovie();
+    getRatings();
+    getComments();
   }, [id]);
 
-  if (!movie) return <div>Movie not found</div>;
+  if (!movie || movie.length === 0) return <div>Loading...</div>;
 
   const handleRating = async (rate: number) => {
-    if (!movie) return;
-
     try {
       await axios.post(`${SERVER_URL}/movies/${id}/rate`, { rating: rate });
       setUserRating(rate);
-      setMovie(prev => ({
-        ...prev!,
-        ratings: [...prev!.ratings, rate]
-      }));
+      setRatings(prev => {
+        const existingRatingIndex = prev.findIndex(r => r.id === userRating);
+        if (existingRatingIndex !== -1) {
+          // Update existing rating
+          const updatedRatings = [...prev];
+          updatedRatings[existingRatingIndex] = { id: userRating, rating: rate };
+          return updatedRatings;
+        }
+        // Add new rating
+        return [...prev, { id: Date.now(), rating: rate }];
+      });
     } catch (error) {
       console.error("Error submitting rating:", error);
+      alert("There was an error submitting your rating. Please try again.");
     }
   };
 
   const handleCommentSubmit = async () => {
-    if (!movie || !newComment || !userName) return;
+    if (!newComment || !userName) return;
 
     try {
       await axios.post(`${SERVER_URL}/movies/${id}/comment`, { user: userName, text: newComment });
-      setMovie(prev => ({
-        ...prev!,
-        comments: [...prev!.comments, { user: userName, text: newComment }]
-      }));
+      setComments(prev => [...prev, { id: Date.now(), user: userName, text: newComment }]);
       setNewComment('');
       setUserName('');
     } catch (error) {
       console.error("Error submitting comment:", error);
+      alert("There was an error submitting your comment. Please try again.");
     }
   };
 
-  const averageRating = movie.ratings.reduce((acc, rate) => acc + rate, 0) / movie.ratings.length || 0;
+  const averageRating = ratings.reduce((acc, { rating }) => acc + rating, 0) / ratings.length || 0;
+
+  console.log(movie);
 
   return (
     <div className="movie-info-container">
@@ -81,10 +119,10 @@ const MovieInfo: React.FC = () => {
         <div className="banner">
           <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner" />
         </div>
-        <h1>{movie.title}</h1>
-        <p><strong>Cast:</strong> {movie.cast}</p>
-        <p><strong>Director:</strong> {movie.director}</p>
-        <p><strong>Synopsis:</strong> {movie.synopsis}</p>
+        <h1>{movie[0].title}</h1>
+        <p><strong>Cast:</strong> {`[WIP]`} </p>
+        <p><strong>Release Date:</strong> {movie[0].release_date}</p>
+        <p><strong>Genre:</strong> {movie[0].genre}</p>
 
         <div className="rating">
           <strong>Average Rating:</strong> {averageRating.toFixed(1)} ★
@@ -102,10 +140,10 @@ const MovieInfo: React.FC = () => {
           </div>
           <div className="rating-list">
             <strong>All Ratings:</strong>
-            {movie.ratings.length ? (
+            {ratings.length ? (
               <ul>
-                {movie.ratings.map((rate, index) => (
-                  <li key={index}>{rate} ★</li>
+                {ratings.map(({ rating }, index) => (
+                  <li key={index}>{rating} ★</li>
                 ))}
               </ul>
             ) : (
@@ -131,10 +169,10 @@ const MovieInfo: React.FC = () => {
             <button onClick={handleCommentSubmit}>Submit Comment</button>
           </div>
           <div className="comment-list">
-            {movie.comments.length ? (
+            {comments.length ? (
               <ul>
-                {movie.comments.map((comment, index) => (
-                  <li key={index}><strong>{comment.user}:</strong> {comment.text}</li>
+                {comments.map(({ user, text }, index) => (
+                  <li key={index}><strong>{user}:</strong> {text}</li>
                 ))}
               </ul>
             ) : (

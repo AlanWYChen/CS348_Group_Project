@@ -145,3 +145,23 @@ button:hover {
 .remove-button:hover {
 	background-color: #c62828;
 }
+
+.title-button-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 100%;
+	height: 100px; /* Adjust height as needed */
+  }
+  
+  .edit-button {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+  }
+  
+  .list-title {
+	margin: 0;
+  }
+  

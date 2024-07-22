@@ -1,9 +1,10 @@
 #root {
+  min-width: 705px;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  padding-top: 75px;
+  padding-top: 100px;
 }
 
 .logo {
