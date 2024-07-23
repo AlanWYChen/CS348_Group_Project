@@ -28,7 +28,35 @@ def db_get_all_lists_user(engine, user_id):
     return user_lists
 
 def db_add_list(engine, user_id, list_name): 
-    run_query(engine, f"INSERT INTO lists(user_id, list_name) VALUES({user_id}, '{list_name}');", False)
+    return run_query(engine, f"INSERT INTO lists(user_id, list_name) VALUES({user_id}, '{list_name}');", False)
 
 def db_remove_list(engine, list_id): 
-    run_query(engine, f"DELETE FROM lists WHERE id={list_id};", False)
+    return run_query(engine, f"DELETE FROM lists WHERE id={list_id};", False)
+
+def db_create_user(engine, name, password):
+    run_query(engine, f"insert into users(username, password) values (\'{name}\', \'{password}\');", False)
+
+def db_login_user(engine, name, password):
+    return run_query(engine, f"SELECT * from users WHERE username=\'{name}\' AND password=\'{password}\';", True)
+
+def create_comment(engine, user_id, movie_id, text):
+    run_query(engine, f"insert  into comments(user_id, movie_id, content) values ({user_id}, {movie_id}, {text});", False)
+
+def view_comment(engine, movie_id):
+    return run_query(engine, f"Select * from comments WHERE movie_id={movie_id};", False)
+
+def get_all_likes(engine, movie_id):
+    return run_query(engine, f"Select * from comments WHERE movie_id={movie_id};", False)
+
+def like_movie(engine, movie_id):
+    pass
+
+def unlike_movie(engine, movie_id):
+    pass
+
+def add_movie_to_list(engine, movie_id, list_id):
+    pass
+
+
+
+

@@ -63,6 +63,7 @@ def get_movies_by_list_id():
 
 @app.route("/user_lists", methods=["GET"])
 def get_user_lists():
+    # print("user_list")
     try: 
         user_id = request.get_json()['user_id']
     except: 
@@ -118,3 +119,43 @@ def remove_user_list():
     return jsonify({
         'message': f"Successfully deleted list: {list_id}"
     }), 200
+
+
+@app.route("/login", methods=["GET"])
+def login_user():
+    try: 
+        username = request.args['username']
+        password = request.args['password']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Username of Password doesnt exist',
+        })
+        return retval, 400
+    result = db_login_user(engine, username, password)
+
+    if result:
+        return Response(status=200)
+    
+    return Response(status=404)
+
+@app.route("/register", methods=["POST"])
+def create_user():
+    try: 
+        username = request.args['username']
+        password = request.args['password']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Username of Password doesnt exist',
+        })
+        return retval, 400
+    try:
+        result = db_create_user(engine, username, password)
+        return Response(status=200)
+    except:
+        retval = jsonify({
+            'message': 'Bad Request: Username Exists',
+        })
+        return retval, 409
+
+
+
