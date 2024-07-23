@@ -136,11 +136,11 @@ def login_user():
     result = db_login_user(engine, username, password)
 
     if result:
-        return jsonify(result)
+        return jsonify(result), 200
     
     return Response(status=404)
 
-@app.route("/register", methods=["GET"])
+@app.route("/register", methods=["POST"])
 def create_user():
     try: 
         username = request.args['username']
@@ -152,7 +152,7 @@ def create_user():
         return retval, 400
     try:
         result = db_create_user(engine, username, password)
-        return jsonify(result)
+        return jsonify(result), 200
     except:
         retval = jsonify({
             'message': 'Bad Request: Username Exists',

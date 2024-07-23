@@ -39,7 +39,7 @@ def db_remove_list(engine, list_id):
 
 def db_create_user(engine, name, password):
     run_query(engine, f"insert into users(username, password) values (\'{name}\', \'{password}\');", False)
-    return run_query(engine, f"SELECT id, username FROM users WHERE username=\'{username}\';", True)
+    return run_query(engine, f"SELECT id, username FROM users WHERE username=\'{name}\';", True)
 
 def db_login_user(engine, name, password):
     return run_query(engine, f"SELECT id, username from users WHERE username=\'{name}\' AND password=\'{password}\';", True)
