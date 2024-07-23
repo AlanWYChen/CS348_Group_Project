@@ -82,11 +82,8 @@ def get_user_lists():
 @app.route("/user_lists", methods=["POST"])
 def add_user_list(): 
     try: 
-        data = request.get_json()
-        print(data)
-        user_id = data['user_id']
-        list_name = data['list_name']
-        print(user_id, list_name)
+        user_id = request.args['user_id']
+        list_name = request.args['list_name']
     except: 
         retval = jsonify({
             'message': 'Bad Request: Missing user id/list_name',
@@ -94,15 +91,20 @@ def add_user_list():
         return retval
 
     try: 
-        db_add_list(engine, user_id, list_name)
-        return jsonify({
-            'message': f"Successfully created list: {list_name}"
-            }), 201
+        if db_add_list(engine, user_id, list_name):
+            return jsonify({
+                'message': f"Successfully created list: {list_name}"
+                }), 201
+        else:
+            retval = jsonify({
+            'message': 'DB Error: Name Exists for List',
+            })
+            return retval, 400
     except:
         retval = jsonify({
             'message': 'DB Error: The INSERT failed',
         })
-        return retval, 500
+        return retval, 400
 
 @app.route("/user_lists", methods=["DELETE"])
 def remove_user_list(): 
@@ -155,7 +157,73 @@ def create_user():
         retval = jsonify({
             'message': 'Bad Request: Username Exists',
         })
-        return retval, 409
+        return retval, 
+
+@app.route("/movie_comment", methods=["POST"])
+def create_comment():
+    try: 
+        user = request.args['user_id']
+        movie = request.args['movie_id']
+        content = request.args['content']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Not All Params Passed',
+        })
+        return retval, 400
+    
+    db_create_comment(engine, user, movie, content)
+    
+    return Response(status=200)
+
+@app.route("/movie_comments", methods=["GET"])
+def get_comments():
+    try: 
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_comments(engine, movie))
+
+@app.route("/like_movie", methods=["POST"])
+def toggle_like():
+    try: 
+        user = request.args['user_id']
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    try:
+        db_like_movie(engine, user, movie)
+    except:
+        db_unlike_movie(engine, user, movie)
+    
+    return Response(status=200)
+
+@app.route("/add_movie_to_list", methods=["POST"])
+def add_movie_to_list():
+    try: 
+        movie = request.args['movie_id']
+        list = request.args['list_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Not All Params Passed',
+        })
+        return retval, 400
+    
+    db_add_movie_to_list(engine, movie, list)
+    
+    return Response(status=200)
+
+
+
+
+
 
 
 
