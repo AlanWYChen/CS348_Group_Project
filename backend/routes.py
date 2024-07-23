@@ -140,7 +140,7 @@ def login_user():
     
     return Response(status=404)
 
-@app.route("/register", methods=["POST"])
+@app.route("/register", methods=["GET"])
 def create_user():
     try: 
         username = request.args['username']
@@ -157,7 +157,7 @@ def create_user():
         retval = jsonify({
             'message': 'Bad Request: Username Exists',
         })
-        return retval, 
+        return retval, 404
 
 @app.route("/movie_comment", methods=["POST"])
 def create_comment():
