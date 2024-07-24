@@ -63,21 +63,17 @@ def get_movies_by_list_id():
 
 @app.route("/user_lists", methods=["GET"])
 def get_user_lists():
-    # print("user_list")
     try: 
-        user_id = request.get_json()['user_id']
+        user_id = request.args['user_id']
     except: 
         retval = jsonify({
             'message': 'Bad Request: Missing user id',
         })
-        return retval
+        return retval,404
 
     user_lists = db_get_all_lists_user(engine, user_id)
 
-    if user_lists: 
-        return jsonify(user_lists)
-
-    return Response(status=204)
+    return jsonify(user_lists), 200
 
 @app.route("/user_lists", methods=["POST"])
 def add_user_list(): 
@@ -219,11 +215,3 @@ def add_movie_to_list():
     db_add_movie_to_list(engine, movie, list)
     
     return Response(status=200)
-
-
-
-
-
-
-
-
