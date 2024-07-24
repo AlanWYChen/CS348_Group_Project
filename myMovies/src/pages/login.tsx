@@ -2,24 +2,42 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/authContext';
+import axios from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import './login.css';
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+interface Login {
+  id:number;
+  username:string;
+}
+
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Simulate login logic
-    if (email === 'test@example.com' && password === 'password123') {
-      login();
+    
+    try {
+      const response = await axios.get(`${SERVER_URL}/login?username=${username}&password=${password}`);
+      login(response.data[0].id);
       navigate('/dashboard');
-    } else {
-      setError('Invalid email or password');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setError('Invalid username or password');
+        console.log(error);
+      } else {
+        console.error('Unexpected error', error);
+      }
     }
+    
+    
   };
 
   return (
@@ -29,12 +47,12 @@ const Login: React.FC = () => {
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="username">Username:</label>
             <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

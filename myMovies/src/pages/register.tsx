@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
+import { AxiosResponse, AxiosError  } from 'axios';
+import axios from 'axios';
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Register = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     // Simulate registration logic
     if (password === confirmPassword) {
-      // Handle successful registration
-      navigate('/login'); // Redirect to login after successful registration
+      
+      await axios.post(`${SERVER_URL}/register?username=${username}&password=${password}`)
+      .then((response: AxiosResponse) => {
+        navigate('/login'); // Redirect to login after successful registration
+        console.log(response);
+      })
+      .catch((reason: AxiosError) => {
+        setError('Passwords do not match');
+        console.log(reason);
+      });
+
     } else {
       setError('Passwords do not match');
     }
@@ -27,12 +40,12 @@ const Register = () => {
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="username">Username:</label>
             <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

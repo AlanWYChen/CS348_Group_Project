@@ -33,14 +33,16 @@ const RandomMovies: React.FC = () => {
 	return (
 		<div>
 			<h1>Recommended Movies</h1>
-			<ul>
-				{movies &&
-					movies.map((movie) => (
-						<li key={movie.id}>
-							<Link to={`/movie/${movie.id}`}>{movie.title}</Link>
-						</li>
-					))}
-			</ul>
+			<div className="movie-grid">
+				{movies && movies.map((movie) => (
+					<div className="movie-box" key={movie.id}>
+						<Link to={`/movie/${movie.id}`}>
+							<img src="https://upload.wikimedia.org/wikipedia/en/4/4d/Shrek_%28character%29.png" alt={movie.title} className="movie-image" />
+							<div className="movie-title">{movie.title}</div>
+						</Link>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };

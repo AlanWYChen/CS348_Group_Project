@@ -1,188 +1,271 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../components/authContext";
+import axios, { AxiosResponse, AxiosError } from "axios";
 
 import "./movieInfo.css";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 interface Movie {
-  id: number;
-  title: string;
-  release_date: string;
-  genre: string;
+	id: number;
+	title: string;
+	release_date: string;
+	genre: string;
 }
 
 interface Rating {
-  id: number;
-  rating: number;
+	id: number;
+	rating: number;
 }
 
 interface Comment {
-  id: number;
-  user: string;
-  text: string;
+	id: number;
+	user: string;
+	text: string;
+}
+
+interface UserList {
+	id: number;
+	list_name: string;
 }
 
 type RouteParams = {
-  id: string;
+	id: string;
 };
 
 const MovieInfo: React.FC = () => {
-  const { id } = useParams<RouteParams>();
+	const { id } = useParams<RouteParams>();
+	const { uid } = useAuth();
+	const [movie, setMovie] = useState<Movie[]>([]);
+	const [ratings, setRatings] = useState<Rating[]>([]);
+	const [comments, setComments] = useState<Comment[]>([]);
+	const [userRating, setUserRating] = useState<number>(0);
+	const [newComment, setNewComment] = useState<string>("");
+	const [userName, setUserName] = useState<string>("");
+	const [userLists, setUserLists] = useState<UserList[]>([]);
+	const [selectedList, setSelectedList] = useState<number | null>(null);
 
-  const [movie, setMovie] = useState<Movie[]>([]);
-  const [ratings, setRatings] = useState<Rating[]>([]);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [userRating, setUserRating] = useState<number>(0);
-  const [newComment, setNewComment] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
+	useEffect(() => {
+		const getMovie = async () => {
+			try {
+				const response = await axios.get<Movie[]>(
+					`${SERVER_URL}/movie?id=${id}`
+				);
+				setMovie(response.data);
+			} catch (error) {
+				console.error("Error fetching movie:", error);
+			}
+		};
 
-  useEffect(() => {
-    const getMovie = async () => {
-      try {
-        const response = await axios.get<Movie[]>(`${SERVER_URL}/movie?id=${id}`);
-        console.log(response);
-        setMovie(response.data);
-      } catch (error) {
-        console.error("Error fetching movie:", error);
-      }
-    };
+		const getRatings = async () => {
+			try {
+				const response = await axios.get<Rating[]>(
+					`${SERVER_URL}/movies/${id}/ratings`
+				);
+				setRatings(response.data);
+			} catch (error) {
+				console.error("Error fetching ratings:", error);
+			}
+		};
 
-    const getRatings = async () => {
-      try {
-        const response = await axios.get<Rating[]>(`${SERVER_URL}/movies/${id}/ratings`);
-        setRatings(response.data);
-      } catch (error) {
-        console.error("Error fetching ratings:", error);
-      }
-    };
+		const getComments = async () => {
+			try {
+				const response = await axios.get<Comment[]>(
+					`${SERVER_URL}/movie_comments?movie_id=${id}`
+				);
+				setComments(response.data);
+			} catch (error) {
+				console.error("Error fetching comments:", error);
+			}
+		};
 
-    const getComments = async () => {
-      try {
-        const response = await axios.get<Comment[]>(`${SERVER_URL}/movies/${id}/comments`);
-        setComments(response.data);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
+		const getUserLists = async () => {
+			await axios
+				.get(`${SERVER_URL}/user_lists?user_id=${uid}`)
+				.then((response: AxiosResponse) => {
+					setUserLists(response.data);
+					if (response.data.length > 0) {
+						setSelectedList(response.data[0].id); // Set the first list as the default selected list
+					}
+					console.log(response);
+				})
+				.catch((reason: AxiosError) => {
+					console.error("Error fetching user lists:", reason);
+				});
+		};
 
-    getMovie();
-    getRatings();
-    getComments();
-  }, [id]);
+		getMovie();
+		getRatings();
+		getComments();
+		getUserLists();
+	}, [id, uid]);
 
-  if (!movie || movie.length === 0) return <div>Loading...</div>;
+	if (!movie || movie.length === 0) return <div>Loading...</div>;
 
-  const handleRating = async (rate: number) => {
-    try {
-      await axios.post(`${SERVER_URL}/movies/${id}/rate`, { rating: rate });
-      setUserRating(rate);
-      setRatings(prev => {
-        const existingRatingIndex = prev.findIndex(r => r.id === userRating);
-        if (existingRatingIndex !== -1) {
-          // Update existing rating
-          const updatedRatings = [...prev];
-          updatedRatings[existingRatingIndex] = { id: userRating, rating: rate };
-          return updatedRatings;
-        }
-        // Add new rating
-        return [...prev, { id: Date.now(), rating: rate }];
-      });
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-      alert("There was an error submitting your rating. Please try again.");
-    }
-  };
+	const handleRating = async (rate: number) => {
+		try {
+			await axios.post(`${SERVER_URL}/movies/${id}/rate`, { rating: rate });
+			setUserRating(rate);
+			setRatings((prev) => {
+				const existingRatingIndex = prev.findIndex((r) => r.id === userRating);
+				if (existingRatingIndex !== -1) {
+					// Update existing rating
+					const updatedRatings = [...prev];
+					updatedRatings[existingRatingIndex] = {
+						id: userRating,
+						rating: rate,
+					};
+					return updatedRatings;
+				}
+				// Add new rating
+				return [...prev, { id: Date.now(), rating: rate }];
+			});
+		} catch (error) {
+			console.error("Error submitting rating:", error);
+			alert("There was an error submitting your rating. Please try again.");
+		}
+	};
 
-  const handleCommentSubmit = async () => {
-    if (!newComment || !userName) return;
+	const handleCommentSubmit = async () => {
+		if (!newComment || !userName) return;
 
-    try {
-      await axios.post(`${SERVER_URL}/movies/${id}/comment`, { user: userName, text: newComment });
-      setComments(prev => [...prev, { id: Date.now(), user: userName, text: newComment }]);
-      setNewComment('');
-      setUserName('');
-    } catch (error) {
-      console.error("Error submitting comment:", error);
-      alert("There was an error submitting your comment. Please try again.");
-    }
-  };
+		try {
+			await axios.post(`${SERVER_URL}/movie_comment`, {
+				user_id: uid,
+				movie_id: id,
+				content: newComment,
+			});
 
-  const averageRating = ratings.reduce((acc, { rating }) => acc + rating, 0) / ratings.length || 0;
+			setComments((prev) => [
+				...prev,
+				{ id: Date.now(), user: userName, text: newComment },
+			]);
+			setNewComment("");
+			setUserName("");
+		} catch (error) {
+			console.error("Error submitting comment:", error);
+			alert("There was an error submitting your comment. Please try again.");
+		}
+	};
 
-  console.log(movie);
+	const handleAddToList = async () => {
+		if (!movie || !selectedList) return;
 
-  return (
-    <div className="movie-info-container">
-      <div className="movie-info">
-        <div className="banner">
-          <img src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg" alt="Banner" />
-        </div>
-        <h1>{movie[0].title}</h1>
-        <p><strong>Cast:</strong> {`[WIP]`} </p>
-        <p><strong>Release Date:</strong> {movie[0].release_date}</p>
-        <p><strong>Genre:</strong> {movie[0].genre}</p>
+		try {
+			await axios.post(`${SERVER_URL}/add_movie_to_list?list_id=${selectedList}&movie_id=${id}`);
 
-        <div className="rating">
-          <strong>Average Rating:</strong> {averageRating.toFixed(1)} ★
-          <div className="rating-input">
-            <strong>Rate this movie:</strong>
-            {[1, 2, 3, 4, 5].map(star => (
-              <span
-                key={star}
-                className={star <= userRating ? 'gold' : ''}
-                onClick={() => handleRating(star)}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-          <div className="rating-list">
-            <strong>All Ratings:</strong>
-            {ratings.length ? (
-              <ul>
-                {ratings.map(({ rating }, index) => (
-                  <li key={index}>{rating} ★</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No ratings yet.</p>
-            )}
-          </div>
-        </div>
+			alert(`${movie[0].title} has been added to your list.`);
+		} catch (error) {
+			console.error("Error adding movie to list:", error);
+			alert(
+				"There was an error adding the movie to your list. Please try again."
+			);
+		}
+	};
 
-        <div className="comments">
-          <h2>Comments</h2>
-          <div className="comment-form">
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Your name"
-            />
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Add a comment"
-            />
-            <button onClick={handleCommentSubmit}>Submit Comment</button>
-          </div>
-          <div className="comment-list">
-            {comments.length ? (
-              <ul>
-                {comments.map(({ user, text }, index) => (
-                  <li key={index}><strong>{user}:</strong> {text}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No comments yet.</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	const averageRating =
+		ratings.reduce((acc, { rating }) => acc + rating, 0) / ratings.length || 0;
+
+	return (
+		<div className="movie-info-container">
+			<div className="movie-info">
+				<div className="banner">
+					<img
+						src="https://mmos.com/wp-content/uploads/2021/07/assassins-creed-infinity-logo-art-banner.jpg"
+						alt="Banner"
+					/>
+				</div>
+				<div className="movie-details-and-list">
+					<div className="movie-details">
+						<h1>{movie[0].title}</h1>
+						<p>
+							<strong>Cast:</strong> {`[WIP]`}{" "}
+						</p>
+						<p>
+							<strong>Release Date:</strong> {movie[0].release_date}
+						</p>
+						<p>
+							<strong>Genre:</strong> {movie[0].genre}
+						</p>
+
+						<div className="rating">
+							<strong>Average Rating:</strong> {averageRating.toFixed(1)} ★
+							<div className="rating-input">
+								<strong>Rate this movie:</strong>
+								{[1, 2, 3, 4, 5].map((star) => (
+									<span
+										key={star}
+										className={star <= userRating ? "gold" : ""}
+										onClick={() => handleRating(star)}
+									>
+										★
+									</span>
+								))}
+							</div>
+							<div className="rating-list">
+								<strong>All Ratings:</strong>
+								{ratings.length ? (
+									<ul>
+										{ratings.map(({ rating }, index) => (
+											<li key={index}>{rating} ★</li>
+										))}
+									</ul>
+								) : (
+									<p>No ratings yet.</p>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className="add-to-list">
+						<h2>Add to List</h2>
+						<select
+							value={selectedList ?? ""}
+							onChange={(e) => setSelectedList(Number(e.target.value))}
+						>
+							{userLists.length > 0 ? userLists.map((list) => (
+								<option key={list.id} value={list.id}>
+									{list.list_name}
+								</option>
+							)): <></>}
+						</select>
+						<button onClick={handleAddToList}>Add to Selected List</button>
+					</div>
+				</div>
+
+				<div className="comments">
+					<h2>Comments</h2>
+					<div className="comment-form">
+						<input
+							type="text"
+							value={userName}
+							onChange={(e) => setUserName(e.target.value)}
+							placeholder="Your name"
+						/>
+						<textarea
+							value={newComment}
+							onChange={(e) => setNewComment(e.target.value)}
+							placeholder="Add a comment"
+						/>
+						<button onClick={handleCommentSubmit}>Submit Comment</button>
+					</div>
+					<div className="comment-list">
+						{comments.length ? (
+							<ul>
+								{comments.map(({ user, text }, index) => (
+									<li key={index}>
+										<strong>{user}:</strong> {text}
+									</li>
+								))}
+							</ul>
+						) : (
+							<p>No comments yet.</p>
+						)}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default MovieInfo;

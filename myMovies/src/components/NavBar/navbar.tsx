@@ -54,11 +54,6 @@ const Navbar: React.FC = () => {
               </NavLink>
             </li>
             <li className="nav__item">
-              <NavLink to="/savedlists" className="nav__link" onClick={closeMenuOnMobile}>
-                Saved Lists
-              </NavLink>
-            </li>
-            <li className="nav__item">
               <NavLink
                 to={isAuthenticated ? '/dashboard' : '/login'}
                 className="nav__link nav__cta"
