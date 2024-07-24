@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./movieList.css"; // Assuming you have a CSS file for styling
+import "./movieList.css";
 
 interface Movie {
 	id: number;
 	title: string;
-	imageUrl: string; // Assuming this property exists
+	imageUrl: string;
 }
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -16,6 +16,9 @@ const MovieList: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>("");
+
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const moviesPerPage = 10;
 
 	useEffect(() => {
 		const getMovies = async () => {
@@ -36,6 +39,20 @@ const MovieList: React.FC = () => {
 		movie.title.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
+	const indexOfLastMovie = currentPage * moviesPerPage;
+	const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+	const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
+
+	const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
+
+	const handleNextPage = () => {
+		setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
+	};
+
+	const handlePreviousPage = () => {
+		setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+	};
+
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -55,14 +72,23 @@ const MovieList: React.FC = () => {
 				className="search-bar"
 			/>
 			<div className="movie-grid">
-				{filteredMovies.map((movie) => (
+				{currentMovies.map((movie) => (
 					<div className="movie-box" key={movie.id}>
 						<Link to={`/movie/${movie.id}`}>
-							<img src="https://upload.wikimedia.org/wikipedia/en/4/4d/Shrek_%28character%29.png" alt={movie.title} className="movie-image" />
+							<img src={"https://upload.wikimedia.org/wikipedia/en/4/4d/Shrek_%28character%29.png"} alt={movie.title} className="movie-image" />
 							<div className="movie-title">{movie.title}</div>
 						</Link>
 					</div>
 				))}
+			</div>
+			<div className="pagination">
+				<button onClick={handlePreviousPage} disabled={currentPage === 1}>
+					Previous
+				</button>
+				<span>Page {currentPage} of {totalPages}</span>
+				<button onClick={handleNextPage} disabled={currentPage === totalPages}>
+					Next
+				</button>
 			</div>
 		</div>
 	);
