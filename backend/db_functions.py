@@ -57,13 +57,13 @@ def db_set_rating(engine, user_id, movie_id, stars):
     try:
         run_query(engine, f"INSERT INTO RATINGS(user_id, movie_id, stars) VALUES({user_id}, {movie_id}, {stars});", False)
     except:
-        run_query(engine, f"UPDATE RATINGS SET stars={stars} WHERE user_id= {user_id} AND movie_id = {movie_id};")
+        run_query(engine, f"UPDATE RATINGS SET stars={stars} WHERE user_id= {user_id} AND movie_id = {movie_id};", False)
 
 def db_delete_rating(engine, user_id, movie_id):
-    run_query(engine, f"DELETE FROM RATINGS WHERE user_id = {user_id} AND movie_id = {movie_id};")
+    run_query(engine, f"DELETE FROM RATINGS WHERE user_id = {user_id} AND movie_id = {movie_id};", False)
 
 def db_get_avg_rating(engine, movie_id):
-    return run_query(engine, f"SELECT avg(stars) as avg_rating FROM ratings WHERE movie_id={movie_id}")
+    return run_query(engine, f"SELECT avg(stars) as avg_rating FROM ratings WHERE movie_id={movie_id}", True)
 
 def db_get_all_movies_mitchy(engine, page): 
     all_movies = run_query(engine, "SELECT title, id FROM movies ORDER BY title;", True)[(page-1)*20:20*page]

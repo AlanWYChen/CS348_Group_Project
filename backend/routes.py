@@ -236,8 +236,11 @@ def rating_add():
         })
         return retval, 400
 
-    db_set_rating(engine, user, movie, rating)
-    
+    try:
+        db_set_rating(engine, user, movie, rating)
+    except Exception as e:
+        print(e)
+        return Response(status=500)
     
     return Response(status=200)
 
