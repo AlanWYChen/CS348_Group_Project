@@ -297,6 +297,7 @@ def search_movie():
         })
         return retval, 400
 
-    movies = db_get_movies_paginated(engine, search_literal, page_num, per_page_count)
+    entries_to_skip = per_page_count * (page_num - 1) 
+    movies = db_get_movies_paginated(engine, search_literal, page_num, entries_to_skip)
     print(movies)
     return jsonify(movies), 200
