@@ -223,6 +223,20 @@ def add_movie_to_list():
     
     return Response(status=200)
 
+@app.route("/remove_movie_from_list", methods=["DELETE"])
+def remove_movie_from_list():
+    try: 
+        movie = request.args['movie_id']
+        list = request.args['list_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Not All Params Passed',
+        })
+        return retval, 400
+    
+    db_remove_movie_from_list(engine, movie, list)
+    
+    return Response(status=200)
 
 @app.route("/add_rating", methods=["POST"])
 def rating_add():

@@ -84,6 +84,8 @@ def db_add_movie_to_list(engine, movie_id, list_id):
 def db_get_all_number_ratings(engine, movie_id):
     return run_query(engine, f"SELECT COUNT(*) FROM ratings WHERE movie_id = {movie_id};", False)
 
+def db_remove_movie_from_list(engine, movie_id, list_id):
+    run_query(engine, f"DELETE FROM listMovies WHERE movie_id={movie_id} AND list_id={list_id};", False)
 
 def db_get_movies_paginated(engine, search_literal, page, entries_to_skip): 
     movies = run_query(engine, f'''select id, title 
