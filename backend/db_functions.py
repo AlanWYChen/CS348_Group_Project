@@ -51,7 +51,7 @@ def db_get_comments(engine, movie_id):
     return run_query(engine, f"Select username, content from comments c JOIN users u on u.id = c.user_id WHERE movie_id={movie_id};", True)
 
 def db_get_rating(engine, user_id, movie_id):
-    return run_query(engine, f"SELECT * FROM ratings WHERE id = {user_id} AND movie_id = {movie_id};", True)
+    return run_query(engine, f"SELECT * FROM ratings WHERE user_id = {user_id} AND movie_id = {movie_id};", True)
 
 def db_set_rating(engine, user_id, movie_id, stars):
     try:
