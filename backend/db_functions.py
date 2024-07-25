@@ -82,5 +82,11 @@ def db_add_movie_to_list(engine, movie_id, list_id):
     run_query(engine, f"insert  into listMovies(list_id, movie_id) values ({list_id}, {movie_id});", False)
 
 
-
-
+def db_get_movies_paginated(engine, search_literal, page, per_page_count): 
+    movies = run_query(engine, f'''select id, title 
+                                    from movies 
+                                    where movies.title like '%{search_literal}%'
+                                    order by title
+                                    limit {per_page_count}
+                                    offset {page}; ''', True)
+    return movies 

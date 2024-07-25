@@ -282,3 +282,21 @@ def get_avg_rating():
         return retval, 400
     
     return jsonify(db_get_avg_rating(engine, user, movie))
+
+
+@app.route("/search", methods=["GET"])
+def search_movie():
+
+    try: 
+        search_literal = request.args["filter"]
+        page_num = request.args["page"] 
+        per_page_count = request.args["count"] # number of movies to return for given page
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Parameters passed incorrectly',
+        })
+        return retval, 400
+
+    movies = db_get_movies_paginated(engine, search_literal, page_num, per_page_count)
+    print(movies)
+    return jsonify(movies), 200
