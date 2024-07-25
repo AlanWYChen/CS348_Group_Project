@@ -48,9 +48,7 @@ def db_create_comment(engine, user_id, movie_id, text):
     run_query(engine, f"insert  into comments(user_id, movie_id, content) values ({user_id}, {movie_id}, \'{text}\');", False)
 
 def db_get_comments(engine, movie_id):
-    return run_query(engine, f"Select username, content from comments c 
-                     JOIN users u on u.user_id = c.user_id
-                     WHERE movie_id={movie_id};", True)
+    return run_query(engine, f"Select username, content from comments c JOIN users u on u.user_id = c.user_id WHERE movie_id={movie_id};", True)
 
 def db_get_rating(engine, user_id, movie_id):
     return run_query(engine, f"SELECT * FROM ratings WHERE user_id = {user_id} AND movie_id = {movie_id};")
@@ -67,6 +65,9 @@ def db_delete_rating(engine, user_id, movie_id):
 def db_get_avg_rating(engine, movie_id):
     return run_query(engine, f"SELECT avg(stars) as avg_rating FROM ratings WHERE movie_id={movie_id}")
 
+def db_get_all_movies_mitchy(engine, page): 
+    all_movies = run_query(engine, "SELECT title, id FROM movies ORDER BY title;", True)[(page-1)*20:20*page]
+    return all_movies
 
 def db_get_all_likes(engine, movie_id):
     return run_query(engine, f"Select count(*) from likes WHERE movie_id={movie_id};", False)
@@ -80,8 +81,6 @@ def db_unlike_movie(engine, user_id, movie_id):
 def db_add_movie_to_list(engine, movie_id, list_id):
     run_query(engine, f"insert  into listMovies(list_id, movie_id) values ({list_id}, {movie_id});", False)
 
-def db_get_all_movies_mitchy(engine, page): 
-    all_movies = run_query(engine, "SELECT title, id FROM movies ORDER BY title;", True)[(page-1)*20:20*page]
-    return all_movies
+
 
 

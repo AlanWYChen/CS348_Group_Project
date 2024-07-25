@@ -225,7 +225,7 @@ def add_movie_to_list():
 
 
 @app.route("/add_rating", methods=["POST"])
-def rating_set():
+def rating_add():
     try: 
         user = request.get_json()['user_id']
         movie = request.get_json()['movie_id']
@@ -242,7 +242,7 @@ def rating_set():
     return Response(status=200)
 
 @app.route("/delete_rating", methods=["POST"])
-def rating_set():
+def rating_delete():
     try: 
         user = request.get_json()['user_id']
         movie = request.get_json()['movie_id']
@@ -258,7 +258,7 @@ def rating_set():
 
 
 @app.route("/get_rating", methods=["GET"])
-def get_comments():
+def get_rating():
     try: 
         user = request.args['user_id']
         movie = request.args['movie_id']
@@ -271,7 +271,7 @@ def get_comments():
     return jsonify(db_get_rating(engine, user, movie))
 
 @app.route("/get_avg_rating", methods=["GET"])
-def get_comments():
+def get_avg_rating():
     try: 
         user = request.args['user_id']
         movie = request.args['movie_id']
