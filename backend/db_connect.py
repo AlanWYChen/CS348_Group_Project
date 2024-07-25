@@ -1,6 +1,6 @@
 from sqlalchemy import text
 
-def run_query(engine, query, should_fetch):
+def run_query(engine, query, should_fetch=False):
     print(query)
     with engine.connect() as connection:
         result = connection.execute(text(query))

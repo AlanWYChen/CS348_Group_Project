@@ -236,8 +236,11 @@ def rating_add():
         })
         return retval, 400
 
-    db_set_rating(engine, user, movie, rating)
-    
+    try:
+        db_set_rating(engine, user, movie, rating)
+    except Exception as e:
+        print(e)
+        return Response(status=500)
     
     return Response(status=200)
 
@@ -283,7 +286,6 @@ def get_avg_rating():
     
     return jsonify(db_get_avg_rating(engine, user, movie))
 
-
 @app.route("/search", methods=["GET"])
 def search_movie():
 
@@ -301,3 +303,16 @@ def search_movie():
     movies = db_get_movies_paginated(engine, search_literal, page_num, entries_to_skip)
     print(movies)
     return jsonify(movies), 200
+
+@app.route("/get_nums_rating", methods=["GET"])
+def get_total_ratings():
+    try: 
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_all_number_ratings(engine, movie))
+
