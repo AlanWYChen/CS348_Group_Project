@@ -24,7 +24,6 @@ def get_movie_from_id():
     #TODO: Add checks for valid movie id in DB? or here? 
     try: 
         movie = db_get_movie_by_id(engine, id)
-        print(movie)
         return jsonify(movie)
     except:
         retval = jsonify({
@@ -37,7 +36,6 @@ def get_movie_from_id():
 @app.route("/all_movies", methods=["GET"])
 def get_all_movies():
     all_movies = db_get_all_movies(engine)
-    print(all_movies)
     if all_movies: 
         return jsonify(all_movies)
     return Response(status=204)
@@ -202,6 +200,14 @@ def toggle_like():
     
     return Response(status=200)
 
+@app.route("/all_movies_mitchy", methods=["GET"])
+def get_all_movies_mitchy():
+    all_movies = db_get_all_movies_mitchy(engine)
+    if all_movies: 
+        return jsonify(all_movies)
+    return Response(status=204)
+
+
 @app.route("/add_movie_to_list", methods=["POST"])
 def add_movie_to_list():
     try: 
@@ -249,3 +255,30 @@ def rating_set():
     db_delete_rating(engine, user, movie)
     
     return Response(status=200)
+
+
+@app.route("/get_rating", methods=["GET"])
+def get_comments():
+    try: 
+        user = request.args['user_id']
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_rating(engine, user, movie))
+
+@app.route("/get_avg_rating", methods=["GET"])
+def get_comments():
+    try: 
+        user = request.args['user_id']
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_avg_rating(engine, user, movie))
