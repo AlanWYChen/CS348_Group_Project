@@ -158,10 +158,11 @@ def create_user():
 @app.route("/movie_comment", methods=["POST"])
 def create_comment():
     try: 
-        user = request.args['user_id']
-        movie = request.args['movie_id']
-        content = request.args['content']
-    except: 
+        user = request.get_json()['user_id']
+        movie = request.get_json()['movie_id']
+        content = request.get_json()['content']
+    except:
+        
         retval = jsonify({
             'message': 'Bad Request: Not All Params Passed',
         })
@@ -186,14 +187,14 @@ def get_comments():
 @app.route("/like_movie", methods=["POST"])
 def toggle_like():
     try: 
-        user = request.args['user_id']
-        movie = request.args['movie_id']
+        user = request.get_json()['user_id']
+        movie = request.get_json()['movie_id']
     except: 
         retval = jsonify({
             'message': 'Bad Request: Movie Not Found',
         })
         return retval, 400
-    
+    print(user, movie)
     try:
         db_like_movie(engine, user, movie)
     except:
@@ -213,5 +214,38 @@ def add_movie_to_list():
         return retval, 400
     
     db_add_movie_to_list(engine, movie, list)
+    
+    return Response(status=200)
+
+
+@app.route("/add_rating", methods=["POST"])
+def rating_set():
+    try: 
+        user = request.get_json()['user_id']
+        movie = request.get_json()['movie_id']
+        rating = request.get_json()['stars']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Not All Params Passed',
+        })
+        return retval, 400
+
+    db_set_rating(engine, user, movie, rating)
+    
+    
+    return Response(status=200)
+
+@app.route("/delete_rating", methods=["POST"])
+def rating_set():
+    try: 
+        user = request.get_json()['user_id']
+        movie = request.get_json()['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Not All Params Passed',
+        })
+        return retval, 400
+
+    db_delete_rating(engine, user, movie)
     
     return Response(status=200)

@@ -50,6 +50,18 @@ def db_create_comment(engine, user_id, movie_id, text):
 def db_get_comments(engine, movie_id):
     return run_query(engine, f"Select * from comments WHERE movie_id={movie_id};", True)
 
+def db_get_rating(engine, user_id, movie_id):
+    return run_query(engine, f"SELECT * FROM ratings WHERE user_id = {user_id} AND movie_id = {movie_id};")
+
+def db_set_rating(engine, user_id, movie_id, stars):
+    try:
+        run_query(engine, f"INSERT INTO RATINGS(user_id, movie_id, stars) VALUES({user_id}, {movie_id}, {stars});")
+    except:
+        run_query(engine, f"UPDATE RATINGS SET stars={stars} WHERE user_id= {user_id} AND movie_id = {movie_id};")
+
+def db_delete_rating(engine, user_id, movie_id):
+    run_query(engine, f"DELETE FROM RATINGS WHERE user_id = {user_id} AND movie_id = {movie_id};")
+
 def db_get_all_likes(engine, movie_id):
     return run_query(engine, f"Select count(*) from likes WHERE movie_id={movie_id};", False)
 
