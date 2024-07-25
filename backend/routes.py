@@ -282,3 +282,15 @@ def get_avg_rating():
         return retval, 400
     
     return jsonify(db_get_avg_rating(engine, user, movie))
+
+@app.route("/get_nums_rating", methods=["GET"])
+def get_total_ratings():
+    try: 
+        movie = request.args['movie_id']
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_all_number_ratings(engine, movie))
