@@ -85,5 +85,11 @@ def db_get_all_number_ratings(engine, movie_id):
     return run_query(engine, f"SELECT COUNT(*) FROM ratings WHERE movie_id = {movie_id};", False)
 
 
-
-
+def db_get_movies_paginated(engine, search_literal, page, entries_to_skip): 
+    movies = run_query(engine, f'''select id, title 
+                                    from movies 
+                                    where movies.title like '%{search_literal}%'
+                                    order by title
+                                    limit {per_page_count}
+                                    offset {entries_to_skip}; ''', True)
+    return movies 
