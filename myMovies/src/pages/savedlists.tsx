@@ -102,7 +102,11 @@ const SavedList: React.FC = () => {
 		if (newListTitle.trim() !== "") {
 			try {
 				const response: AxiosResponse = await axios.post(
-					`${SERVER_URL}/user_lists?user_id=${uid}&list_name=${newListTitle}`
+					`${SERVER_URL}/user_lists`,
+					{
+						user_id: uid,
+						list_name: newListTitle,
+					}
 				);
 				const createdList = response.data;
 				setSList((prevLists) => [...prevLists, createdList]);
