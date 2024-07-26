@@ -232,9 +232,6 @@ const MovieInfo: React.FC = () => {
 					<div className="movie-details">
 						<h1>{movie[0].title}</h1>
 						<p>
-							<strong>Cast:</strong> {`[WIP]`}{" "}
-						</p>
-						<p>
 							<strong>Director:</strong>{" "}
 							{directors.reduce(
 								(accumulator, currentValue) =>
