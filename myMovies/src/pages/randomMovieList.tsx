@@ -19,7 +19,7 @@ const RandomMovies: React.FC = () => {
 
 	useEffect(() => {
 		const getMovies = async () => {
-			const response = await axios.get(SERVER_URL + "/recommended_movies");
+			const response = await axios.get(SERVER_URL + "/all_movies");
 			console.log(response.data);
 			const shuffled = response.data.sort(() => 0.5 - Math.random());
 			// Get sub-array of first n elements after shuffled

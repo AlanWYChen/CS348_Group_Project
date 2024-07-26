@@ -60,120 +60,61 @@ const MovieInfo: React.FC = () => {
 	const [directors, setDirectors] = useState<Director[]>([]);
 	const [writers, setWriters] = useState<Writer[]>([]);
 	const [overallRating, setOverallRating] = useState<OverallRating>({ avg_rating: 0, num_ratings: 0 });
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		const getMovie = async () => {
+		const fetchData = async () => {
 			try {
-				const response = await axios.get<Movie[]>(
-					`${SERVER_URL}/movie?id=${id}`
-				);
-				setMovie(response.data);
-				//console.log(response.data);
+				const [
+					movieResponse,
+					ratingResponse,
+					commentsResponse,
+					userListsResponse,
+					directorsResponse,
+					writersResponse,
+					overallRatingResponse,
+				] = await Promise.all([
+					axios.get<Movie[]>(`${SERVER_URL}/movie?id=${id}`),
+					axios.get(`${SERVER_URL}/get_rating?user_id=${uid}&movie_id=${id}`),
+					axios.get(`${SERVER_URL}/movie_comments?movie_id=${id}`),
+					axios.get(`${SERVER_URL}/user_lists?user_id=${uid}`),
+					axios.get(`${SERVER_URL}/get_director?movie_id=${id}`),
+					axios.get(`${SERVER_URL}/get_writer?movie_id=${id}`),
+					axios.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`),
+				]);
+
+				setMovie(movieResponse.data);
+				setUserRating(ratingResponse.data[0].stars);
+				setComments(commentsResponse.data);
+				setUserLists(userListsResponse.data);
+				setDirectors(directorsResponse.data);
+				setWriters(writersResponse.data);
+				setOverallRating(overallRatingResponse.data[0]);
+
+				if (userListsResponse.data.length > 0) {
+					setSelectedList(userListsResponse.data[0].id); // Set the first list as the default selected list
+				}
 			} catch (error) {
-				console.error("Error fetching movie:", error);
+				console.error("Error fetching data:", error);
+			} finally {
+				setLoading(false);
 			}
 		};
 
-		const getRatings = async () => {
-			try {
-				const response = await axios.get(
-					`${SERVER_URL}/get_rating?user_id=${uid}&movie_id=${id}`
-				);
-
-				const { stars:a } = response.data[0];
-
-				//console.log(response.data);
-				setUserRating(a);
-			} catch (error) {
-				console.error("Error fetching ratings:", error);
-			}
-		};
-
-		const getComments = async () => {
-			try {
-				const response = await axios.get(
-					`${SERVER_URL}/movie_comments?movie_id=${id}`
-				);
-				//console.log(response.data);
-				setComments(response.data);
-			} catch (error) {
-				console.error("Error fetching comments:", error);
-			}
-		};
-
-		const getUserLists = async () => {
-			await axios
-				.get(`${SERVER_URL}/user_lists?user_id=${uid}`)
-				.then((response: AxiosResponse) => {
-					setUserLists(response.data);
-					if (response.data.length > 0) {
-						setSelectedList(response.data[0].id); // Set the first list as the default selected list
-					}
-					//console.log(response);
-				})
-				.catch((reason: AxiosError) => {
-					console.error("Error fetching user lists:", reason);
-				});
-		};
-
-		const getDirectors = async () => {
-			await axios
-				.get(`${SERVER_URL}/get_director?movie_id=${id}`)
-				.then((response: AxiosResponse) => {
-					setDirectors(response.data);
-					//console.log(response);
-				})
-				.catch((reason: AxiosError) => {
-					console.error("Error fetching director:", reason);
-				});
-		};
-
-		const getWriters = async () => {
-			await axios
-				.get(`${SERVER_URL}/get_writer?movie_id=${id}`)
-				.then((response: AxiosResponse) => {
-					setWriters(response.data);
-					//console.log(response);
-				})
-				.catch((reason: AxiosError) => {
-					console.error("Error fetching writers:", reason);
-				});
-		};
-
-		const getOverallRating = async () => {
-			await axios
-				.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`)
-				.then((response: AxiosResponse) => {
-					setOverallRating(response.data[0]);
-					//console.log(overallRating.num_ratings);
-					//console.log(response.data);
-				})
-				.catch((reason: AxiosError) => {
-					console.error("Error fetching ratings:", reason);
-				});
-		}
-
-		getMovie();
-		getRatings();
-		getComments();
-		getUserLists();
-		getDirectors();
-		getWriters();
-		getOverallRating();
+		fetchData();
 	}, [id, uid]);
-
-	if (!movie || movie.length === 0) return <div>Loading...</div>;
 
 	const handleRating = async (rate: number) => {
 		try {
-			//console.log(uid, id, rate);
-
-			await axios.post(`${SERVER_URL}/add_rating?`, {
+			await axios.post(`${SERVER_URL}/add_rating`, {
 				user_id: uid,
 				movie_id: id,
 				stars: rate,
 			});
 			setUserRating(rate);
+
+			const overallRatingResponse = await axios.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`);
+			setOverallRating(overallRatingResponse.data[0]);
 		} catch (error) {
 			console.error("Error submitting rating:", error);
 			alert("There was an error submitting your rating. Please try again.");
@@ -182,8 +123,6 @@ const MovieInfo: React.FC = () => {
 
 	const handleCommentSubmit = async () => {
 		if (!newComment) return;
-
-		//console.log(uid, id, newComment);
 
 		try {
 			await axios.post(`${SERVER_URL}/movie_comment`, {
@@ -221,6 +160,10 @@ const MovieInfo: React.FC = () => {
 		}
 	};
 
+	if (loading) return <div>Loading...</div>;
+
+	if (!movie || movie.length === 0) return <div>No movie found</div>;
+
 	return (
 		<div className="movie-info-container">
 			<div className="movie-info">
@@ -231,102 +174,149 @@ const MovieInfo: React.FC = () => {
 					/>
 				</div>
 				<div className="movie-details-and-list">
-					<div className="movie-details">
-						<h1>{movie[0].title}</h1>
-						<p>
-							<strong>Director:</strong>{" "}
-							{directors.reduce(
-								(accumulator, currentValue) =>
-									currentValue.name + ", " + accumulator,
-								""
-							)}
-						</p>
-						<p>
-							<strong>Writer:</strong>{" "}
-							{writers.reduce(
-								(accumulator, currentValue) =>
-									currentValue.name + ", " + accumulator,
-								""
-							)}
-						</p>
-						<p>
-							<strong>Release Date:</strong> {movie[0].release_date}
-						</p>
-						<p>
-							<strong>Genre:</strong> {movie[0].genres}
-						</p>
+					<MovieDetails
+						movie={movie[0]}
+						directors={directors}
+						writers={writers}
+						userRating={userRating}
+						handleRating={handleRating}
+						overallRating={overallRating}
+					/>
+					<UserLists
+						userLists={userLists}
+						selectedList={selectedList}
+						setSelectedList={setSelectedList}
+						handleAddToList={handleAddToList}
+					/>
+				</div>
+				<Comments
+					comments={comments}
+					newComment={newComment}
+					setNewComment={setNewComment}
+					userName={userName}
+					setUserName={setUserName}
+					handleCommentSubmit={handleCommentSubmit}
+				/>
+			</div>
+		</div>
+	);
+};
 
-						<div className="rating">
-							<strong>Average Rating:</strong> {(+overallRating.avg_rating).toFixed(1)} ★
-							<div className="rating-input">
-								<strong>Rate this movie:</strong>
-								{[1, 2, 3, 4, 5].map((star) => (
-									<span
-										key={star}
-										className={star <= userRating ? "gold" : ""}
-										onClick={() => handleRating(star)}
-									>
-										★
-									</span>
-								))}
-							</div>
-							<div className="rating-list">
-								<strong>All Ratings:</strong>
-								{overallRating.num_ratings > 0 ? (
-									<p> {overallRating.num_ratings} </p>
-								) : (
-									<p>No ratings yet.</p>
-								)}
-							</div>
-						</div>
-					</div>
-					<div className="add-to-list">
-						<h2>Add to List</h2>
-						<select
-							value={selectedList ?? ""}
-							onChange={(e) => setSelectedList(Number(e.target.value))}
+const MovieDetails: React.FC<{
+	movie: Movie;
+	directors: Director[];
+	writers: Writer[];
+	userRating: number;
+	handleRating: (rate: number) => void;
+	overallRating: OverallRating;
+}> = ({ movie, directors, writers, userRating, handleRating, overallRating }) => {
+	return (
+		<div className="movie-details">
+			<h1>{movie.title}</h1>
+			<p>
+				<strong>Director:</strong>{" "}
+				{directors.map((director) => director.name).join(", ")}
+			</p>
+			<p>
+				<strong>Writer:</strong>{" "}
+				{writers.map((writer) => writer.name).join(", ")}
+			</p>
+			<p>
+				<strong>Release Date:</strong> {movie.release_date}
+			</p>
+			<p>
+				<strong>Genre:</strong> {movie.genres}
+			</p>
+			<div className="rating">
+				<strong>Average Rating:</strong> {(+overallRating.avg_rating).toFixed(1)} ★
+				<div className="rating-input">
+					<strong>Rate this movie:</strong>
+					{[1, 2, 3, 4, 5].map((star) => (
+						<span
+							key={star}
+							className={star <= userRating ? "gold" : ""}
+							onClick={() => handleRating(star)}
 						>
-							{userLists.length > 0 ? (
-								userLists.map((list) => (
-									<option key={list.id} value={list.id}>
-										{list.list_name}
-									</option>
-								))
-							) : (
-								<></>
-							)}
-						</select>
-						<button onClick={handleAddToList}>Add to Selected List</button>
-					</div>
+							★
+						</span>
+					))}
 				</div>
+				<div className="rating-list">
+					<strong>All Ratings:</strong>
+					{overallRating.num_ratings > 0 ? (
+						<p> {overallRating.num_ratings} </p>
+					) : (
+						<p>No ratings yet.</p>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+};
 
-				<div className="comments">
-					<h2>Comments</h2>
-					<div className="comment-form">
-						<textarea
-							value={newComment}
-							onChange={(e) => setNewComment(e.target.value)}
-							placeholder="Add a comment"
-						/>
-						<button onClick={handleCommentSubmit}>Submit Comment</button>
-					</div>
-					<div className="comment-list">
-						{comments.length > 0 ? (
-							<ul>
-								{comments.map(({ username: user, content: text }, index) => (
-									<li key={index}>
-										<div>
-											{" "}
-											{user}: {text}{" "}
-										</div>
-									</li>
-								))}
-							</ul>
-						) : (
-							<p>No comments yet.</p>
-						)}
-					</div>
-				</div>
+const UserLists: React.FC<{
+	userLists: UserList[];
+	selectedList: number | null;
+	setSelectedList: React.Dispatch<React.SetStateAction<number | null>>;
+	handleAddToList: () => void;
+}> = ({ userLists, selectedList, setSelectedList, handleAddToList }) => {
+	return (
+		<div className="add-to-list">
+			<h2>Add to List</h2>
+			<select
+				value={selectedList ?? ""}
+				onChange={(e) => setSelectedList(Number(e.target.value))}
+			>
+				{userLists.length > 0 ? (
+					userLists.map((list) => (
+						<option key={list.id} value={list.id}>
+							{list.list_name}
+						</option>
+					))
+				) : (
+					<option value="">No lists available</option>
+				)}
+			</select>
+			<button onClick={handleAddToList}>Add to List</button>
+		</div>
+	);
+};
+
+const Comments: React.FC<{
+	comments: Comment[];
+	newComment: string;
+	setNewComment: React.Dispatch<React.SetStateAction<string>>;
+	userName: string;
+	setUserName: React.Dispatch<React.SetStateAction<string>>;
+	handleCommentSubmit: () => void;
+}> = ({ comments, newComment, setNewComment, userName, setUserName, handleCommentSubmit }) => {
+	return (
+		<div className="comments">
+			<h2>Comments</h2>
+			{comments.length > 0 ? (
+				<ul>
+					{comments.map((comment, index) => (
+						<li key={index}>
+							<strong>{comment.username}</strong>: {comment.content}
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No comments yet.</p>
+			)}
+			<div className="comment-form">
+				<input
+					type="text"
+					placeholder="Your name"
+					value={userName}
+					onChange={(e) => setUserName(e.target.value)}
+				/>
+				<textarea
+					placeholder="Your comment"
+					value={newComment}
+					onChange={(e) => setNewComment(e.target.value)}
+				></textarea>
+				<button onClick={handleCommentSubmit}>Submit Comment</button>
 			</div>
 		</div>
 	);
