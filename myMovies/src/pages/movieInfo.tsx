@@ -68,7 +68,7 @@ const MovieInfo: React.FC = () => {
 					`${SERVER_URL}/movie?id=${id}`
 				);
 				setMovie(response.data);
-				console.log(response.data);
+				//console.log(response.data);
 			} catch (error) {
 				console.error("Error fetching movie:", error);
 			}
@@ -79,6 +79,11 @@ const MovieInfo: React.FC = () => {
 				const response = await axios.get(
 					`${SERVER_URL}/get_rating?user_id=${uid}&movie_id=${id}`
 				);
+
+				const { stars:a } = response.data[0];
+
+				//console.log(response.data);
+				setUserRating(a);
 			} catch (error) {
 				console.error("Error fetching ratings:", error);
 			}
@@ -89,7 +94,7 @@ const MovieInfo: React.FC = () => {
 				const response = await axios.get(
 					`${SERVER_URL}/movie_comments?movie_id=${id}`
 				);
-				console.log(response.data);
+				//console.log(response.data);
 				setComments(response.data);
 			} catch (error) {
 				console.error("Error fetching comments:", error);
@@ -104,7 +109,7 @@ const MovieInfo: React.FC = () => {
 					if (response.data.length > 0) {
 						setSelectedList(response.data[0].id); // Set the first list as the default selected list
 					}
-					console.log(response);
+					//console.log(response);
 				})
 				.catch((reason: AxiosError) => {
 					console.error("Error fetching user lists:", reason);
@@ -116,7 +121,7 @@ const MovieInfo: React.FC = () => {
 				.get(`${SERVER_URL}/get_director?movie_id=${id}`)
 				.then((response: AxiosResponse) => {
 					setDirectors(response.data);
-					console.log(response);
+					//console.log(response);
 				})
 				.catch((reason: AxiosError) => {
 					console.error("Error fetching director:", reason);
@@ -128,7 +133,7 @@ const MovieInfo: React.FC = () => {
 				.get(`${SERVER_URL}/get_writer?movie_id=${id}`)
 				.then((response: AxiosResponse) => {
 					setWriters(response.data);
-					console.log(response);
+					//console.log(response);
 				})
 				.catch((reason: AxiosError) => {
 					console.error("Error fetching writers:", reason);
@@ -140,8 +145,8 @@ const MovieInfo: React.FC = () => {
 				.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`)
 				.then((response: AxiosResponse) => {
 					setOverallRating(response.data[0]);
-					console.log(overallRating.num_ratings);
-					console.log(response.data);
+					//console.log(overallRating.num_ratings);
+					//console.log(response.data);
 				})
 				.catch((reason: AxiosError) => {
 					console.error("Error fetching ratings:", reason);
@@ -161,7 +166,7 @@ const MovieInfo: React.FC = () => {
 
 	const handleRating = async (rate: number) => {
 		try {
-			console.log(uid, id, rate);
+			//console.log(uid, id, rate);
 
 			await axios.post(`${SERVER_URL}/add_rating?`, {
 				user_id: uid,
@@ -178,7 +183,7 @@ const MovieInfo: React.FC = () => {
 	const handleCommentSubmit = async () => {
 		if (!newComment) return;
 
-		console.log(uid, id, newComment);
+		//console.log(uid, id, newComment);
 
 		try {
 			await axios.post(`${SERVER_URL}/movie_comment`, {
