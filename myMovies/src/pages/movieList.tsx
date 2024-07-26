@@ -75,7 +75,7 @@ const MovieList: React.FC = () => {
 				{currentMovies.map((movie) => (
 					<div className="movie-box" key={movie.id}>
 						<Link to={`/movie/${movie.id}`}>
-							<img src={"https://upload.wikimedia.org/wikipedia/en/4/4d/Shrek_%28character%29.png"} alt={movie.title} className="movie-image" />
+							<img src={"https://image.tmdb.org/t/p/w500/6WBeq4fCfn7AN0o21W9qNcRF2l9.jpg"} alt={movie.title} className="movie-image" />
 							<div className="movie-title">{movie.title}</div>
 						</Link>
 					</div>

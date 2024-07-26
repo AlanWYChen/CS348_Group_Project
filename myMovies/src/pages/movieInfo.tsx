@@ -15,14 +15,14 @@ interface Movie {
 }
 
 interface Rating {
-	id: number;
-	rating: number;
+	user_id: number;
+	movie_id: number;
+	stars: number;
 }
 
 interface Comment {
-	id: number;
-	user: string;
-	text: string;
+	username: string;
+	content: string;
 }
 
 interface UserList {
@@ -60,8 +60,8 @@ const MovieInfo: React.FC = () => {
 
 		const getRatings = async () => {
 			try {
-				const response = await axios.get<Rating[]>(
-					`${SERVER_URL}/movies/${id}/ratings`
+				const response = await axios.get(
+					`${SERVER_URL}/get_rating?user_id=${uid}&movie_id=${id}`
 				);
 				setRatings(response.data);
 			} catch (error) {
@@ -71,9 +71,10 @@ const MovieInfo: React.FC = () => {
 
 		const getComments = async () => {
 			try {
-				const response = await axios.get<Comment[]>(
+				const response = await axios.get(
 					`${SERVER_URL}/movie_comments?movie_id=${id}`
 				);
+				console.log(response.data);
 				setComments(response.data);
 			} catch (error) {
 				console.error("Error fetching comments:", error);
@@ -105,21 +106,26 @@ const MovieInfo: React.FC = () => {
 
 	const handleRating = async (rate: number) => {
 		try {
-			await axios.post(`${SERVER_URL}/movies/${id}/rate`, { rating: rate });
+
+			console.log(uid, id, rate);
+
+			await axios.post(`${SERVER_URL}/add_rating?`, 
+				{ user_id: uid, movie_id: id, stars: rate });
 			setUserRating(rate);
 			setRatings((prev) => {
-				const existingRatingIndex = prev.findIndex((r) => r.id === userRating);
+				const existingRatingIndex = prev.findIndex((r) => r.movie_id === userRating);
 				if (existingRatingIndex !== -1) {
 					// Update existing rating
 					const updatedRatings = [...prev];
 					updatedRatings[existingRatingIndex] = {
-						id: userRating,
-						rating: rate,
+						user_id: uid,
+						movie_id: userRating,
+						stars: rate,
 					};
 					return updatedRatings;
 				}
 				// Add new rating
-				return [...prev, { id: Date.now(), rating: rate }];
+				return [...prev, { user_id: uid, movie_id: Date.now(), stars: rate }];
 			});
 		} catch (error) {
 			console.error("Error submitting rating:", error);
@@ -128,7 +134,9 @@ const MovieInfo: React.FC = () => {
 	};
 
 	const handleCommentSubmit = async () => {
-		if (!newComment || !userName) return;
+		if (!newComment) return;
+
+		console.log(uid, id, newComment);
 
 		try {
 			await axios.post(`${SERVER_URL}/movie_comment`, {
@@ -139,7 +147,7 @@ const MovieInfo: React.FC = () => {
 
 			setComments((prev) => [
 				...prev,
-				{ id: Date.now(), user: userName, text: newComment },
+				{ id: Date.now(), username: userName, content: newComment },
 			]);
 			setNewComment("");
 			setUserName("");
@@ -165,7 +173,7 @@ const MovieInfo: React.FC = () => {
 	};
 
 	const averageRating =
-		ratings.reduce((acc, { rating }) => acc + rating, 0) / ratings.length || 0;
+		ratings.reduce((acc, { stars: rating }) => acc + rating, 0) / ratings.length || 0;
 
 	return (
 		<div className="movie-info-container">
@@ -205,12 +213,8 @@ const MovieInfo: React.FC = () => {
 							</div>
 							<div className="rating-list">
 								<strong>All Ratings:</strong>
-								{ratings.length ? (
-									<ul>
-										{ratings.map(({ rating }, index) => (
-											<li key={index}>{rating} ★</li>
-										))}
-									</ul>
+								{ratings.length > 0 ? (
+									<p> {ratings.length} </p>
 								) : (
 									<p>No ratings yet.</p>
 								)}
@@ -236,12 +240,6 @@ const MovieInfo: React.FC = () => {
 				<div className="comments">
 					<h2>Comments</h2>
 					<div className="comment-form">
-						<input
-							type="text"
-							value={userName}
-							onChange={(e) => setUserName(e.target.value)}
-							placeholder="Your name"
-						/>
 						<textarea
 							value={newComment}
 							onChange={(e) => setNewComment(e.target.value)}
@@ -250,11 +248,11 @@ const MovieInfo: React.FC = () => {
 						<button onClick={handleCommentSubmit}>Submit Comment</button>
 					</div>
 					<div className="comment-list">
-						{comments.length ? (
+						{comments.length > 0 ? (
 							<ul>
-								{comments.map(({ user, text }, index) => (
+								{comments.map(({ username: user, content: text }, index) => (
 									<li key={index}>
-										<strong>{user}:</strong> {text}
+										<div> {user}: {text} </div>
 									</li>
 								))}
 							</ul>

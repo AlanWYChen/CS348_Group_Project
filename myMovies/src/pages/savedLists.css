@@ -136,10 +136,9 @@ button:hover {
 	width: auto;
 	text-align: center;
 	height: auto;
-	position: absolute; /* Position absolutely within .movie-title */
-	top: 50%;
+	position: absolute; /* Position absolutely within .movie-box */
+	bottom: -10px; /* Position to the bottom */
 	right: 10px; /* Position to the right side */
-	transform: translateY(-50%); /* Center vertically */
 }
 
 .remove-button:hover {
@@ -153,15 +152,14 @@ button:hover {
 	position: relative;
 	width: 100%;
 	height: 100px; /* Adjust height as needed */
-  }
-  
-  .edit-button {
+}
+
+.edit-button {
 	position: absolute;
 	top: 10px;
 	left: 10px;
-  }
-  
-  .list-title {
+}
+
+.list-title {
 	margin: 0;
-  }
-  
+}
