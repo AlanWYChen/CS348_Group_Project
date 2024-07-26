@@ -40,17 +40,18 @@ const SavedList: React.FC = () => {
 
 	const { uid } = useAuth();
 
+	const getLists = async () => {
+		try {
+			const response: AxiosResponse = await axios.get(
+				`${SERVER_URL}/user_lists?user_id=${uid}`
+			);
+			setSList(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
-		const getLists = async () => {
-			try {
-				const response: AxiosResponse = await axios.get(
-					`${SERVER_URL}/user_lists?user_id=${uid}`
-				);
-				setSList(response.data);
-			} catch (error) {
-				console.log(error);
-			}
-		};
 		getLists();
 	}, [uid]);
 
@@ -109,7 +110,7 @@ const SavedList: React.FC = () => {
 					}
 				);
 				const createdList = response.data;
-				setSList((prevLists) => [...prevLists, createdList]);
+				getLists();
 				setNewListTitle("");
 			} catch (error) {
 				console.log(error);
