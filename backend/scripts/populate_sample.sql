@@ -1,5 +1,12 @@
 use sample_film_folio;
 
+delete from listmovies;
+delete from lists;
+delete from likes;
+delete from comments;
+delete from ratings;
+delete from users;
+
 INSERT INTO users (id, username, password) VALUES
 (1, 'Mitchell', 'Dolny'),
 (2, 'Aumio', 'Islam'),

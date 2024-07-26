@@ -91,3 +91,39 @@ CREATE TABLE listMovies (
   FOREIGN KEY(list_id) REFERENCES lists(id),
   FOREIGN KEY(movie_id) REFERENCES movies(id)
 );
+
+DROP TABLE IF EXISTS names;
+
+CREATE TABLE names (
+  nconst VARCHAR(16),
+  name VARCHAR(128) NOT NULL,
+
+  PRIMARY KEY(nconst)
+);
+
+DROP TABLE IF EXISTS director;
+
+CREATE TABLE director (
+  tconst VARCHAR(16),
+  nconst VARCHAR(16),
+
+  PRIMARY KEY(tconst, nconst)
+);
+
+DROP TABLE IF EXISTS writers;
+
+CREATE TABLE writers (
+  tconst VARCHAR(16),
+  nconst VARCHAR(16),
+
+  PRIMARY KEY(tconst, nconst)
+);
+
+DROP TABLE IF EXISTS genres;
+
+CREATE TABLE genres (
+  tconst VARCHAR(16),
+  genres VARCHAR(50) NOT NULL,
+
+  PRIMARY KEY(tconst, genres)
+);
