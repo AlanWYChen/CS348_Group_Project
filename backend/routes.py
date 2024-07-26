@@ -81,13 +81,13 @@ def get_user_lists():
 @app.route("/user_lists", methods=["POST"])
 def add_user_list(): 
     try: 
-        user_id = request.args['user_id']
-        list_name = request.args['list_name']
+        user_id = request.get_json()['user_id']
+        list_name = request.get_json()['list_name']
     except: 
         retval = jsonify({
             'message': 'Bad Request: Missing user id/list_name',
         })
-        return retval
+        return retval, 400
 
     try: 
         if db_add_list(engine, user_id, list_name):
