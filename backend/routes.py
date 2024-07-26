@@ -31,13 +31,18 @@ def get_movie_from_id():
         })
         return retval, 500
 
-    
-
 @app.route("/all_movies", methods=["GET"])
 def get_all_movies():
     all_movies = db_get_all_movies(engine)
     if all_movies: 
         return jsonify(all_movies)
+    return Response(status=204)
+        
+@app.route("/recommended_movies", methods=["GET"])
+def get_recommended_movies():
+    recommended_movies = db_get_recommended_movies(engine)
+    if recommended_movies: 
+        return jsonify(recommended_movies)
     return Response(status=204)
 
 @app.route("/movies_in_list", methods=["GET"])
