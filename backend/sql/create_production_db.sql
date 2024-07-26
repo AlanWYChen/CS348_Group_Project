@@ -14,15 +14,11 @@ CREATE TABLE users (
 
 DROP TRIGGER IF EXISTS production_film_folio.addDefaultList; 
 
-delimiter |
-CREATE TRIGGER addDefaultList AFTER INSERT ON users
+CREATE TRIGGER addDefaultList 
+AFTER INSERT ON users
   FOR EACH ROW
-  BEGIN
     INSERT into lists(user_id, list_name) VALUES(NEW.id , 'Liked');
-  END;
-|
 
-delimiter ;
 
 DROP TABLE IF EXISTS movies;
 
