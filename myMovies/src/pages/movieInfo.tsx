@@ -83,12 +83,12 @@ const MovieInfo: React.FC = () => {
 				]);
 
 				setMovie(movieResponse.data);
-				setUserRating(ratingResponse.data[0].stars);
 				setComments(commentsResponse.data);
 				setUserLists(userListsResponse.data);
 				setDirectors(directorsResponse.data);
 				setWriters(writersResponse.data);
 				setOverallRating(overallRatingResponse.data[0]);
+				setUserRating(ratingResponse.data[0].stars);
 
 				if (userListsResponse.data.length > 0) {
 					setSelectedList(userListsResponse.data[0].id); // Set the first list as the default selected list
