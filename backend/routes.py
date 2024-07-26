@@ -295,7 +295,6 @@ def get_rating():
 @app.route("/get_avg_rating", methods=["GET"])
 def get_avg_rating():
     try: 
-        user = request.args['user_id']
         movie = request.args['movie_id']
     except: 
         retval = jsonify({
