@@ -1,14 +1,23 @@
 use production_film_folio;
 
-INSERT INTO users (id, username, password) VALUES
-(1, 'Mitchell', 'Dolny'),
-(2, 'Aumio', 'Islam'),
-(3, 'Alan', 'Alookie'),
-(4, 'Shriya', 'Kaistha');
+DELETE FROM comments;
+DELETE FROM likes;
+DELETE FROM ratings;
+DELETE FROM listMovies;
 
+DELETE FROM lists;
+DELETE FROM users;
+
+ALTER TABLE lists AUTO_INCREMENT = 1;
+ALTER TABLE users AUTO_INCREMENT = 1;
+
+INSERT INTO users (username, password) VALUES
+('Mitchell', 'Dolny'),
+('Aumio', 'Islam'),
+('Alan', 'Alookie'),
+('Shriya', 'Kaistha');
 
 -- Populate likes table
-delete from likes;
 INSERT INTO likes (user_id, movie_id) VALUES
 (1, 234),
 (2, 567),
@@ -27,7 +36,6 @@ INSERT INTO likes (user_id, movie_id) VALUES
 (3, 4750);
 
 -- Populate ratings table
-delete from ratings;
 INSERT INTO ratings (user_id, movie_id, stars) VALUES
 (1, 234, 1),
 (2, 567, 2),
@@ -46,7 +54,6 @@ INSERT INTO ratings (user_id, movie_id, stars) VALUES
 (3, 4750,1);
 
 -- Populate comments table
-delete from comments;
 INSERT INTO comments (user_id, movie_id, content) VALUES
 (1, 1, 'Amazing movie, must watch!'),
 (2, 2, 'A classic. Timeless masterpiece.'),
@@ -54,7 +61,7 @@ INSERT INTO comments (user_id, movie_id, content) VALUES
 (4, 1, 'Life Changing!');
 
 -- Populate lists table
-delete from lists;
+ALTER TABLE lists AUTO_INCREMENT = 1;
 INSERT INTO lists (user_id, list_name) VALUES
 (1, 'Watchlist'),
 (2, 'Watchlist'),
@@ -76,3 +83,4 @@ INSERT INTO listMovies (list_id, movie_id) VALUES
 (2, 555),
 (2, 666),
 (2, 777);
+
