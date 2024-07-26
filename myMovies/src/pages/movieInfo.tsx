@@ -54,7 +54,6 @@ const MovieInfo: React.FC = () => {
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [userRating, setUserRating] = useState<number>(0);
 	const [newComment, setNewComment] = useState<string>("");
-	const [userName, setUserName] = useState<string>("");
 	const [userLists, setUserLists] = useState<UserList[]>([]);
 	const [selectedList, setSelectedList] = useState<number | null>(null);
 	const [directors, setDirectors] = useState<Director[]>([]);
@@ -131,12 +130,11 @@ const MovieInfo: React.FC = () => {
 				content: newComment,
 			});
 
-			setComments((prev) => [
-				...prev,
-				{ id: Date.now(), username: userName, content: newComment },
-			]);
+			const response = await axios.get(`${SERVER_URL}/movie_comments?movie_id=${id}`);
+
+			setComments(response.data);
+			
 			setNewComment("");
-			setUserName("");
 		} catch (error) {
 			console.error("Error submitting comment:", error);
 			alert("There was an error submitting your comment. Please try again.");
@@ -193,8 +191,6 @@ const MovieInfo: React.FC = () => {
 					comments={comments}
 					newComment={newComment}
 					setNewComment={setNewComment}
-					userName={userName}
-					setUserName={setUserName}
 					handleCommentSubmit={handleCommentSubmit}
 				/>
 			</div>
@@ -286,12 +282,18 @@ const Comments: React.FC<{
 	comments: Comment[];
 	newComment: string;
 	setNewComment: React.Dispatch<React.SetStateAction<string>>;
-	userName: string;
-	setUserName: React.Dispatch<React.SetStateAction<string>>;
 	handleCommentSubmit: () => void;
-}> = ({ comments, newComment, setNewComment, userName, setUserName, handleCommentSubmit }) => {
+}> = ({ comments, newComment, setNewComment, handleCommentSubmit }) => {
 	return (
 		<div className="comments">
+			<div className="comment-form">
+				<textarea
+					placeholder="Your comment"
+					value={newComment}
+					onChange={(e) => setNewComment(e.target.value)}
+				></textarea>
+				<button onClick={handleCommentSubmit}>Submit Comment</button>
+			</div>
 			<h2>Comments</h2>
 			{comments.length > 0 ? (
 				<ul>
@@ -304,20 +306,6 @@ const Comments: React.FC<{
 			) : (
 				<p>No comments yet.</p>
 			)}
-			<div className="comment-form">
-				<input
-					type="text"
-					placeholder="Your name"
-					value={userName}
-					onChange={(e) => setUserName(e.target.value)}
-				/>
-				<textarea
-					placeholder="Your comment"
-					value={newComment}
-					onChange={(e) => setNewComment(e.target.value)}
-				></textarea>
-				<button onClick={handleCommentSubmit}>Submit Comment</button>
-			</div>
 		</div>
 	);
 };
