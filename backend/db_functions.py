@@ -3,6 +3,7 @@ from .db_connect import run_query
 
 def db_get_all_movies(engine): 
     all_movies = run_query(engine, "SELECT title, id, external_id FROM movies ORDER BY title;", True)
+    return all_movies
     
 # returns the first 10 movies with highest average rating 
 def db_get_recommended_movies(engine): 
