@@ -76,7 +76,7 @@ def db_delete_rating(engine, user_id, movie_id):
     run_query(engine, f"DELETE FROM RATINGS WHERE user_id = {user_id} AND movie_id = {movie_id};", False)
 
 def db_get_avg_rating(engine, movie_id):
-    return run_query(engine, f"SELECT count(*) as num_ratings, avg(stars) as avg_rating FROM ratings WHERE movied_id={movie_id};", True)
+    return run_query(engine, f"SELECT count(*) as num_ratings, avg(stars) as avg_rating FROM ratings WHERE movie_id={movie_id};", True)
 
 # def db_get_count_rating(engine, movie_id):
 #     return run_query(engine, f"SELECT count(*) as num_rating FROM ratings WHERE movie_id={movie_id};", True)
