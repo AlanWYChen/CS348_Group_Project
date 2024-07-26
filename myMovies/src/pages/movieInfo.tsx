@@ -51,7 +51,6 @@ const MovieInfo: React.FC = () => {
 	const { id } = useParams<RouteParams>();
 	const { uid } = useAuth();
 	const [movie, setMovie] = useState<Movie[]>([]);
-	const [ratings, setRatings] = useState<Rating[]>([]);
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [userRating, setUserRating] = useState<number>(0);
 	const [newComment, setNewComment] = useState<string>("");
@@ -80,7 +79,6 @@ const MovieInfo: React.FC = () => {
 				const response = await axios.get(
 					`${SERVER_URL}/get_rating?user_id=${uid}&movie_id=${id}`
 				);
-				setRatings(response.data);
 			} catch (error) {
 				console.error("Error fetching ratings:", error);
 			}
@@ -141,7 +139,8 @@ const MovieInfo: React.FC = () => {
 			await axios
 				.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`)
 				.then((response: AxiosResponse) => {
-					setOverallRating(response.data);
+					setOverallRating(response.data[0]);
+					console.log(overallRating.num_ratings);
 					console.log(response.data);
 				})
 				.catch((reason: AxiosError) => {
@@ -170,23 +169,6 @@ const MovieInfo: React.FC = () => {
 				stars: rate,
 			});
 			setUserRating(rate);
-			setRatings((prev) => {
-				const existingRatingIndex = prev.findIndex(
-					(r) => r.movie_id === userRating
-				);
-				if (existingRatingIndex !== -1) {
-					// Update existing rating
-					const updatedRatings = [...prev];
-					updatedRatings[existingRatingIndex] = {
-						user_id: uid,
-						movie_id: userRating,
-						stars: rate,
-					};
-					return updatedRatings;
-				}
-				// Add new rating
-				return [...prev, { user_id: uid, movie_id: Date.now(), stars: rate }];
-			});
 		} catch (error) {
 			console.error("Error submitting rating:", error);
 			alert("There was an error submitting your rating. Please try again.");
@@ -270,7 +252,7 @@ const MovieInfo: React.FC = () => {
 						</p>
 
 						<div className="rating">
-							<strong>Average Rating:</strong> {overallRating.avg_rating.toFixed(1)} ★
+							<strong>Average Rating:</strong> {(+overallRating.avg_rating).toFixed(1)} ★
 							<div className="rating-input">
 								<strong>Rate this movie:</strong>
 								{[1, 2, 3, 4, 5].map((star) => (
