@@ -11,7 +11,7 @@ interface Movie {
 	id: number;
 	title: string;
 	release_date: string;
-	genre: string;
+	genres: string;
 }
 
 interface Rating {
@@ -53,6 +53,7 @@ const MovieInfo: React.FC = () => {
 					`${SERVER_URL}/movie?id=${id}`
 				);
 				setMovie(response.data);
+				console.log(response.data);
 			} catch (error) {
 				console.error("Error fetching movie:", error);
 			}
@@ -194,7 +195,7 @@ const MovieInfo: React.FC = () => {
 							<strong>Release Date:</strong> {movie[0].release_date}
 						</p>
 						<p>
-							<strong>Genre:</strong> {movie[0].genre}
+							<strong>Genre:</strong> {movie[0].genres}
 						</p>
 
 						<div className="rating">
