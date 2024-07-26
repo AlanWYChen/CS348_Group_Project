@@ -303,7 +303,7 @@ def get_avg_rating():
         })
         return retval, 400
     
-    return jsonify(db_get_avg_rating(engine, user, movie))
+    return jsonify(db_get_avg_rating(engine, movie))
 
 @app.route("/search", methods=["GET"])
 def search_movie():
