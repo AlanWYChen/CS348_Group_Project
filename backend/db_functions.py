@@ -2,7 +2,7 @@ import os, re
 from .db_connect import run_query
 
 def db_get_all_movies(engine): 
-    all_movies = run_query(engine, "SELECT title, id FROM movies ORDER BY title;", True)
+    all_movies = run_query(engine, "SELECT title, id, external_id FROM movies ORDER BY title;", True)
     return all_movies
 
 def db_get_movie_by_id(engine, movie_id): 
@@ -11,7 +11,7 @@ def db_get_movie_by_id(engine, movie_id):
 
 #get all the movies from a given list_id
 def db_get_movies_in_list(engine, list_id):
-    movies_in_list = run_query(engine, '''SELECT Movies.id, Movies.title
+    movies_in_list = run_query(engine, '''SELECT Movies.id, Movies.title, Movies.external_id
                                  FROM Movies, (
                                     SELECT * 
                                     FROM listMovies 
