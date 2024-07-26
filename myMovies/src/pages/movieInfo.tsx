@@ -34,6 +34,14 @@ type RouteParams = {
 	id: string;
 };
 
+interface Director {
+	name: string;
+}
+
+interface Writer {
+	name: string;
+}
+
 const MovieInfo: React.FC = () => {
 	const { id } = useParams<RouteParams>();
 	const { uid } = useAuth();
@@ -45,6 +53,8 @@ const MovieInfo: React.FC = () => {
 	const [userName, setUserName] = useState<string>("");
 	const [userLists, setUserLists] = useState<UserList[]>([]);
 	const [selectedList, setSelectedList] = useState<number | null>(null);
+	const [directors, setDirectors] = useState<Director[]>([]);
+	const [writers, setWriters] = useState<Writer[]>([]);
 
 	useEffect(() => {
 		const getMovie = async () => {
@@ -97,24 +107,54 @@ const MovieInfo: React.FC = () => {
 				});
 		};
 
+		const getDirectors = async () => {
+			await axios
+				.get(`${SERVER_URL}/get_director?movie_id=${id}`)
+				.then((response: AxiosResponse) => {
+					setDirectors(response.data);
+					console.log(response);
+				})
+				.catch((reason: AxiosError) => {
+					console.error("Error fetching director:", reason);
+				});
+		};
+
+		const getWriters = async () => {
+			await axios
+				.get(`${SERVER_URL}/get_writer?movie_id=${id}`)
+				.then((response: AxiosResponse) => {
+					setWriters(response.data);
+					console.log(response);
+				})
+				.catch((reason: AxiosError) => {
+					console.error("Error fetching director:", reason);
+				});
+		};
+
 		getMovie();
 		getRatings();
 		getComments();
 		getUserLists();
+		getDirectors();
+		getWriters();
 	}, [id, uid]);
 
 	if (!movie || movie.length === 0) return <div>Loading...</div>;
 
 	const handleRating = async (rate: number) => {
 		try {
-
 			console.log(uid, id, rate);
 
-			await axios.post(`${SERVER_URL}/add_rating?`, 
-				{ user_id: uid, movie_id: id, stars: rate });
+			await axios.post(`${SERVER_URL}/add_rating?`, {
+				user_id: uid,
+				movie_id: id,
+				stars: rate,
+			});
 			setUserRating(rate);
 			setRatings((prev) => {
-				const existingRatingIndex = prev.findIndex((r) => r.movie_id === userRating);
+				const existingRatingIndex = prev.findIndex(
+					(r) => r.movie_id === userRating
+				);
 				if (existingRatingIndex !== -1) {
 					// Update existing rating
 					const updatedRatings = [...prev];
@@ -162,7 +202,9 @@ const MovieInfo: React.FC = () => {
 		if (!movie || !selectedList) return;
 
 		try {
-			await axios.post(`${SERVER_URL}/add_movie_to_list?list_id=${selectedList}&movie_id=${id}`);
+			await axios.post(
+				`${SERVER_URL}/add_movie_to_list?list_id=${selectedList}&movie_id=${id}`
+			);
 
 			alert(`${movie[0].title} has been added to your list.`);
 		} catch (error) {
@@ -174,7 +216,8 @@ const MovieInfo: React.FC = () => {
 	};
 
 	const averageRating =
-		ratings.reduce((acc, { stars: rating }) => acc + rating, 0) / ratings.length || 0;
+		ratings.reduce((acc, { stars: rating }) => acc + rating, 0) /
+			ratings.length || 0;
 
 	return (
 		<div className="movie-info-container">
@@ -190,6 +233,22 @@ const MovieInfo: React.FC = () => {
 						<h1>{movie[0].title}</h1>
 						<p>
 							<strong>Cast:</strong> {`[WIP]`}{" "}
+						</p>
+						<p>
+							<strong>Director:</strong>{" "}
+							{directors.reduce(
+								(accumulator, currentValue) =>
+									currentValue.name + ", " + accumulator,
+								""
+							)}
+						</p>
+						<p>
+							<strong>Writer:</strong>{" "}
+							{writers.reduce(
+								(accumulator, currentValue) =>
+									currentValue.name + ", " + accumulator,
+								""
+							)}
 						</p>
 						<p>
 							<strong>Release Date:</strong> {movie[0].release_date}
@@ -228,11 +287,15 @@ const MovieInfo: React.FC = () => {
 							value={selectedList ?? ""}
 							onChange={(e) => setSelectedList(Number(e.target.value))}
 						>
-							{userLists.length > 0 ? userLists.map((list) => (
-								<option key={list.id} value={list.id}>
-									{list.list_name}
-								</option>
-							)): <></>}
+							{userLists.length > 0 ? (
+								userLists.map((list) => (
+									<option key={list.id} value={list.id}>
+										{list.list_name}
+									</option>
+								))
+							) : (
+								<></>
+							)}
 						</select>
 						<button onClick={handleAddToList}>Add to Selected List</button>
 					</div>
@@ -253,7 +316,10 @@ const MovieInfo: React.FC = () => {
 							<ul>
 								{comments.map(({ username: user, content: text }, index) => (
 									<li key={index}>
-										<div> {user}: {text} </div>
+										<div>
+											{" "}
+											{user}: {text}{" "}
+										</div>
 									</li>
 								))}
 							</ul>
