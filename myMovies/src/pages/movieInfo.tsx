@@ -42,6 +42,11 @@ interface Writer {
 	name: string;
 }
 
+interface OverallRating {
+	avg_rating: number;
+	num_ratings: number;
+}
+
 const MovieInfo: React.FC = () => {
 	const { id } = useParams<RouteParams>();
 	const { uid } = useAuth();
@@ -55,6 +60,7 @@ const MovieInfo: React.FC = () => {
 	const [selectedList, setSelectedList] = useState<number | null>(null);
 	const [directors, setDirectors] = useState<Director[]>([]);
 	const [writers, setWriters] = useState<Writer[]>([]);
+	const [overallRating, setOverallRating] = useState<OverallRating>({ avg_rating: 0, num_ratings: 0 });
 
 	useEffect(() => {
 		const getMovie = async () => {
@@ -127,9 +133,21 @@ const MovieInfo: React.FC = () => {
 					console.log(response);
 				})
 				.catch((reason: AxiosError) => {
-					console.error("Error fetching director:", reason);
+					console.error("Error fetching writers:", reason);
 				});
 		};
+
+		const getOverallRating = async () => {
+			await axios
+				.get(`${SERVER_URL}/get_avg_rating?movie_id=${id}`)
+				.then((response: AxiosResponse) => {
+					setOverallRating(response.data);
+					console.log(response.data);
+				})
+				.catch((reason: AxiosError) => {
+					console.error("Error fetching ratings:", reason);
+				});
+		}
 
 		getMovie();
 		getRatings();
@@ -137,6 +155,7 @@ const MovieInfo: React.FC = () => {
 		getUserLists();
 		getDirectors();
 		getWriters();
+		getOverallRating();
 	}, [id, uid]);
 
 	if (!movie || movie.length === 0) return <div>Loading...</div>;
@@ -215,10 +234,6 @@ const MovieInfo: React.FC = () => {
 		}
 	};
 
-	const averageRating =
-		ratings.reduce((acc, { stars: rating }) => acc + rating, 0) /
-			ratings.length || 0;
-
 	return (
 		<div className="movie-info-container">
 			<div className="movie-info">
@@ -255,7 +270,7 @@ const MovieInfo: React.FC = () => {
 						</p>
 
 						<div className="rating">
-							<strong>Average Rating:</strong> {averageRating.toFixed(1)} ★
+							<strong>Average Rating:</strong> {overallRating.avg_rating.toFixed(1)} ★
 							<div className="rating-input">
 								<strong>Rate this movie:</strong>
 								{[1, 2, 3, 4, 5].map((star) => (
@@ -270,8 +285,8 @@ const MovieInfo: React.FC = () => {
 							</div>
 							<div className="rating-list">
 								<strong>All Ratings:</strong>
-								{ratings.length > 0 ? (
-									<p> {ratings.length} </p>
+								{overallRating.num_ratings > 0 ? (
+									<p> {overallRating.num_ratings} </p>
 								) : (
 									<p>No ratings yet.</p>
 								)}
