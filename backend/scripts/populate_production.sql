@@ -1,6 +1,6 @@
 use production_film_folio;
 
--- INSERT INTO users (id, username, password) VALUES
+INSERT INTO users (id, username, password) VALUES
 (1, 'Mitchell', 'Dolny'),
 (2, 'Aumio', 'Islam'),
 (3, 'Alan', 'Alookie'),
@@ -52,10 +52,6 @@ INSERT INTO comments (user_id, movie_id, content) VALUES
 
 -- Populate lists table
 INSERT INTO lists (user_id, list_name) VALUES
-(1, 'Liked'),
-(2, 'Liked'),
-(3, 'Liked'),
-(4, 'Liked'),
 (1, 'Watchlist'),
 (2, 'Watchlist'),
 (3, 'Watchlist'),

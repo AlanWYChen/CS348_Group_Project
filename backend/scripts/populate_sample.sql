@@ -28,7 +28,7 @@ INSERT INTO comments (user_id, movie_id, content) VALUES
 
 -- Populate lists table
 INSERT INTO lists (user_id, list_name) VALUES
-(1, 'Liked'),
+(1, 'Romance'),
 (2, 'Watchlist');
 
 -- Populate listMovies table

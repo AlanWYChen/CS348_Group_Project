@@ -12,6 +12,18 @@ CREATE TABLE users (
   password VARCHAR(128) NOT NULL
 );
 
+DROP TRIGGER IF EXISTS sample_film_folio.addDefaultList; 
+
+delimiter |
+CREATE TRIGGER addDefaultList AFTER INSERT ON users
+  FOR EACH ROW
+  BEGIN
+    INSERT into lists(user_id, list_name) VALUES(NEW.id , 'Liked');
+  END;
+|
+
+delimiter ;
+
 DROP TABLE IF EXISTS movies;
 
 CREATE TABLE movies (
