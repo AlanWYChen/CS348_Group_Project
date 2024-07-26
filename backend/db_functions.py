@@ -95,3 +95,21 @@ def db_get_movies_paginated(engine, search_literal, page, entries_to_skip):
                                     limit {per_page_count}
                                     offset {entries_to_skip}; ''', True)
     return movies 
+
+def db_get_directors(engine, movie_id):
+    return run_query(engine, f'''
+                     SELECT name from director d
+                     JOIN movies m ON m.external_id = d.tconst
+                     JOIN names n on d.nconst = n.nconst WHERE id={movie_id};''', True)
+
+def db_get_genres(engine, movie_id):
+    return run_query(engine, f'''
+                     SELECT g.genres from genres g
+                     JOIN movies m ON m.external_id = g.tconst
+                     WHERE id={movie_id};''', True)
+
+def db_get_cast(engine, movie_id):
+    return run_query(engine, f'''
+                     SELECT name from writers w
+                     JOIN movies m ON m.external_id = w.tconst
+                     JOIN names n on w.nconst = n.nconst WHERE id={movie_id};''', True)

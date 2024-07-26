@@ -330,3 +330,43 @@ def get_total_ratings():
     
     return jsonify(db_get_all_number_ratings(engine, movie))
 
+
+@app.route("/get_director", methods=["GET"])
+def get_director():
+    try: 
+        movie = request.args['movie_id']
+        print(movie)
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_directors(engine, movie))
+
+@app.route("/get_genre", methods=["GET"])
+def get_genre():
+    try: 
+        movie = request.args['movie_id']
+        print(movie)
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_genres(engine, movie))
+
+@app.route("/get_writer", methods=["GET"])
+def get_writer():
+    try: 
+        movie = request.args['movie_id']
+        print(movie)
+    except: 
+        retval = jsonify({
+            'message': 'Bad Request: Movie Not Found',
+        })
+        return retval, 400
+    
+    return jsonify(db_get_cast(engine, movie))
+
